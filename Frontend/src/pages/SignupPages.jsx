@@ -6,7 +6,7 @@ import LoginNavbar from "../Componets/loginNavbar";
 import facebook from "../assets/Image/facebook.png";
 import google from "../assets/Image/google.png";
 import apple from "../assets/Image/apple.png";
-import signupImage from "../assets/Image/Sign Up.png";
+import signupImage from "../assets/Image/Signup.png";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import axios from "axios";
@@ -57,7 +57,7 @@ const SignupPages = () => {
 
     try {
       const response = await axios.post(
-        "https://api.academygpt.net/api/auth/registration",
+        "https://academy-gpt-backend.onrender.com/api/auth/registration",
         {
           first_name: firstName,
           last_name: lastName,
@@ -72,7 +72,7 @@ const SignupPages = () => {
       );
 
       if (response.status === 201) {
-        navigate("/leanernavbar");
+        navigate("/loginpage");
       }
     } catch (error) {
       setError(
