@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import profileimg from "../../assets/Image/tutorprofile.png";
 import { LiaCertificateSolid } from "react-icons/lia";
 import flag from "../../assets/Image/UK Flag.png";
@@ -11,25 +11,71 @@ import { CiLocationOn } from "react-icons/ci";
 import { FaUserGroup, FaDollarSign, FaCar } from "react-icons/fa6";
 import { IoIosStar } from "react-icons/io";
 import CustomCalendar from "../../Componets/CustomCalander";
+import { fetchTeacherData } from "../../features/teacherSlice";
+import { useSelector, useDispatch } from "react-redux";
+import person from "../../assets/Image/person.png";
+
 
 const TutorProfile = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
+   const { teacher: combinedProfile, loading, error, isFetched } = useSelector(
+      (state) => state.teacher
+    );
 
   const handleProfileAddClick = () => {
     navigate("tutoraddprofile");
   };
 
+    useEffect(() => {
+      if (!isFetched && !loading && !error) {
+        dispatch(fetchTeacherData());
+      }
+    }, [dispatch, isFetched, loading, error]);
+
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      );
+    }
+  
+
+    if (error) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <p className="text-red-500">
+            {error?.message || "An error occurred. Please try again later."}
+          </p>
+        </div>
+      );
+    }
+  
+    if (!combinedProfile?.teacher_profile) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <p className="text-gray-500">
+            You are not associated with a teacher profile. Please contact support
+            if you believe this is a mistake.
+          </p>
+        </div>
+      );
+    }
+
+
+
   return (
     <>
-      <div className="font-urbanist">
+      <div className="font-urbanist py-5 px-5">
         <div className="px-5 space-y-5 md:space-y-0 md:space-x-5 md:flex">
           <div className="border-2 p-3 drop-shadow-md rounded-lg min-h-full md:w-4/6">
             <div className="flex space-x-3">
               <div className="w-2/6">
                 <img
                   className="size-[120px] xl:size-48 rounded-md"
-                  src={profileimg}
+                 src={combinedProfile.data?.profile_picture || person}
                   alt="profile-img"
                 />
               </div>
@@ -37,7 +83,7 @@ const TutorProfile = () => {
                 <div className="flex justify-between">
                   <div>
                     <h1 className="text-lg xl:text-2xl font-semibold">
-                      Asad B.
+                      {combinedProfile.data?.username}
                     </h1>
                   </div>
                   <div>
@@ -82,7 +128,7 @@ const TutorProfile = () => {
                     <div className="flex space-x-2">
                       <CiLocationOn className="my-auto size-5 xl:size-6 text-[#C1C1C1]" />
                       <p className="font-medium text-[13px] xl:text-base">
-                        New, York City, Usa
+                         {combinedProfile.data?.address || "N/A"}
                       </p>
                     </div>
                     <div className="flex space-x-2">
@@ -110,13 +156,13 @@ const TutorProfile = () => {
                     <div className="flex space-x-2">
                       <MdEmail className="my-auto size-5 xl:size-6 text-[#C1C1C1]" />
                       <p className="font-medium text-[13px] xl:text-base">
-                        123456@gmail.com
+                      {combinedProfile.data?.email || "N/A"}
                       </p>
                     </div>
                     <div className="flex space-x-2">
                       <RiPhoneFill className="my-auto size-5 xl:size-6 text-[#C1C1C1]" />
                       <p className="font-medium text-[13px] xl:text-base">
-                        123456789
+                      {combinedProfile.teacher_profile?.phone || "N/A"}
                       </p>
                     </div>
                   </div>
@@ -124,7 +170,7 @@ const TutorProfile = () => {
                     <div className="flex space-x-2">
                       <MdLock className="my-auto size-5 xl:size-6 text-[#C1C1C1]" />
                       <p className="font-medium text-[13px] xl:text-base">
-                        123***********231
+                      {combinedProfile.data?.password|| "N/A"}
                       </p>
                     </div>
                     <div className="flex space-x-2">
@@ -134,7 +180,7 @@ const TutorProfile = () => {
                         alt="img"
                       />
                       <p className="font-medium text-[13px] xl:text-base">
-                        English
+                      {combinedProfile.data?.languages || "N/A"}
                       </p>
                     </div>
                   </div>
@@ -156,34 +202,31 @@ const TutorProfile = () => {
               <div className="flex justify-between">
                 <div className="flex space-x-2">
                   <CiLocationOn className="my-auto size-5 text-[#C1C1C1]" />
-                  <p className="font-medium text-[13px]">New, York City, Usa</p>
+                  <p className="font-medium text-[13px]">{combinedProfile.data?.address || "N/A"}</p>
                 </div>
                 <div className="flex text-left space-x-2">
                   <MdEmail className="my-auto size-5 text-[#C1C1C1]" />
-                  <p className="font-medium text-[13px]">123456@gmail.com</p>
+                  <p className="font-medium text-[13px]">{combinedProfile.data?.email || "N/A"}</p>
                 </div>
               </div>
               <div className="flex justify-between">
-                <div className="flex space-x-2">
-                  <FaUserGroup className="my-auto size-5 text-[#C1C1C1]" />
-                  <p className="font-medium text-[13px]">New, York City, Usa</p>
-                </div>
-                <div className="flex space-x-2">
-                  <RiPhoneFill className="my-auto size-5 text-[#C1C1C1]" />
-                  <p className="font-medium text-[13px]">123456789</p>
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <div className="flex space-x-2">
+              <div className="flex space-x-2">
                   <FaDollarSign className="my-auto size-5 xl:size-6 text-[#C1C1C1]" />
                   <p className="font-medium text-[13px] xl:text-base">
                     Hourly Rate: <span className="font-medium">$45</span>
                   </p>
                 </div>
                 <div className="flex space-x-2">
+                  <RiPhoneFill className="my-auto size-5 text-[#C1C1C1]" />
+                  <p className="font-medium text-[13px]">{combinedProfile.data?.phone || "N/A"}</p>
+                </div>
+              </div>
+              <div className="flex justify-between">
+              
+                <div className="flex space-x-2">
                   <MdLock className="my-auto size-5 xl:size-6 text-[#C1C1C1]" />
                   <p className="font-medium text-[13px] xl:text-base">
-                    123***********231
+                  {combinedProfile.data?.password || "N/A"}
                   </p>
                 </div>
               </div>
@@ -203,7 +246,7 @@ const TutorProfile = () => {
                     src={flag}
                     alt="img"
                   />
-                  <p className="font-medium text-[13px] my-auto">English</p>
+                  <p className="font-medium text-[13px] my-auto">{combinedProfile.data?.languages || "N/A"}</p>
                 </div>
               </div>
             </div>
@@ -243,7 +286,7 @@ const TutorProfile = () => {
               </p>
               <div className="justify-end">
                 <p className="font-semibold text-right text-xs">
-                  New York City
+                {combinedProfile.data?.address || "N/A"}
                 </p>
               </div>
             </div>
@@ -253,19 +296,7 @@ const TutorProfile = () => {
                 Basic Information
               </h2>
               <p className="text-[9.49px] md:text-sm lg:text-base xl:text-lg text-black/80 font-normal">
-                is simply dummy text of the printing and typesetting industry.
-                Lorem Ipsum has been the industry&apos;s standard dummy text
-                ever since the 1500s,{" "}
-                <span className="flex md:hidden">
-                  when an unknown printer took a galley of type and scrambled it
-                  to make a type specimen book. It has survived not only five
-                  centuries, but also the leap into electronic typesetting,
-                  remaining essentially unchanged. It was popularised in the
-                  1960s with the release of Letraset sheets containing Lorem
-                  Ipsum passages, and more recently with desktop publishing
-                  software like Aldus PageMaker including versions of Lorem
-                  Ipsum.
-                </span>
+              {combinedProfile.teacher_profile?.basic_info || "N/A"}
               </p>
             </div>
             <div>
@@ -273,13 +304,7 @@ const TutorProfile = () => {
                 Skill
               </h2>
               <p className="text-[9.49px] md:text-sm lg:text-base xl:text-lg text-black/80 font-normal">
-                is simply dummy text of the printing and typesetting industry.
-                Lorem Ipsum has been the industry&apos;s standard dummy text
-                ever since the 1500s,
-                <span className="flex md:hidden">
-                  when an unknown printer took a galley of type and scrambled it
-                  to make a type specimen book.
-                </span>
+              {combinedProfile.teacher_profile?.skill || "N/A"}
               </p>
             </div>
             <div>
@@ -287,13 +312,7 @@ const TutorProfile = () => {
                 Education
               </h2>
               <p className="text-[9.49px] md:text-sm lg:text-base xl:text-lg text-black/80 font-normal">
-                is simply dummy text of the printing and typesetting industry.
-                Lorem Ipsum has been the industry&apos;s standard dummy text
-                ever since the 1500s,{" "}
-                <span className="flex md:hidden">
-                  when an unknown printer took a galley of type and scrambled it
-                  to make a type specimen book.
-                </span>
+              {combinedProfile.teacher_profile?.education || "N/A"}
               </p>
             </div>
             <div>
@@ -301,13 +320,7 @@ const TutorProfile = () => {
                 Work Experience
               </h2>
               <p className="text-[9.49px] md:text-sm lg:text-base xl:text-lg text-black/80 font-normal">
-                is simply dummy text of the printing and typesetting industry.
-                Lorem Ipsum has been the industry&apos;s standard dummy text
-                ever since the 1500s,{" "}
-                <span className="flex md:hidden">
-                  when an unknown printer took a galley of type and scrambled it
-                  to make a type specimen book.
-                </span>
+              {combinedProfile.teacher_profile?.work_experience || "N/A"} 
               </p>
             </div>
           </div>

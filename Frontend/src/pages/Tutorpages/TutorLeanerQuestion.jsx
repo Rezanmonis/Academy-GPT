@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { IoIosSearch } from "react-icons/io";
 import axios from "axios";
 
-const LearnerQuestions = () => {
+const TutorLearnerQuestions = () => {
   const [queries, setQueries] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -128,6 +128,14 @@ const LearnerQuestions = () => {
                   </p>
                 </div>
               </div>
+
+              <div className="flex justify-end">
+                  <div>
+                    <button className=" bg-[#046B49] p-1 px-2 text-xs lg:text-base xl:text-lg font-semibold text-white rounded-md">
+                      Answer Now
+                    </button>
+                  </div>
+                </div>
             </div>
           </div>
         ))}
@@ -145,4 +153,4 @@ const LearnerQuestions = () => {
   );
 };
 
-export default LearnerQuestions;
+export default TutorLearnerQuestions;

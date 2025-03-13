@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Excalidraw, MainMenu, WelcomeScreen } from "@excalidraw/excalidraw";
+import { Excalidraw, MainMenu, WelcomeScreen } from "excalidraw";
 import { ZoomToolBar } from "./ZoomToolBar";
 import { ColorToolBar } from "./ColorToolBar";
 import { TextFormatToolBar } from "./TextFormatToolBar";
@@ -375,7 +375,11 @@ const WhiteBoard = () => {
               <button
                 className="mobileHamBudger"
                 onClick={toggleDrawer}
-               >
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}>
                 <FaBars style={{ fontSize: "24px" }} />
               </button>
               <div className="undoRedo">

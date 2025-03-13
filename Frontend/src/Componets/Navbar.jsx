@@ -1,4 +1,4 @@
-import logo from "../assets/Image/Logo.png";
+// import logo from "../assets/Image/Logo.png";
 import { Link,  } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -13,11 +13,12 @@ const { t } = useTranslation();
             <div className="flex space-x-1 md:space-x-10 lg:space-x-12 xl:space-x-20">
               <Link to={"/"}>
                 {" "}
-                <img
+                {/* <img
                   className="w-16 h-7 mt-2 lg:mt-3 lg:h-7 my-auto md:w-28 xl:w-36 xl:h-9"
                   src={logo}
                   alt="logo"
-                />
+                /> */}
+                <h2 className=" text-white my-auto whitespace-nowrap font-bold text-sm md:text-2xl lg:text-3xl justify-center items-center py-2 mt-1">Academy GPT</h2>
               </Link>
             </div>
 

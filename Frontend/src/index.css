@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
-/* @import url("../../excalidraw/packages/excalidraw/dist/dev/index.css"); */
+@import url("../../excalidraw/packages/excalidraw/dist/dev/index.css");
 
 @tailwind base;
 @tailwind components;
@@ -76,22 +76,11 @@ label[title="Rectangle — R or 2"] {
   height: 180px !important;
   max-width: max-content !important;
 }
-.mobileHamBudger {
-  display: none;
-  border: none;
-  cursor: pointer;
-}
 @media (min-width: 480px) and (max-width: 767px) and (orientation: landscape) {
   #sessionMiniContainer .self-view {
   width: 100% !important;
   height: 82.15px !important;
   max-width: max-content !important;
-}
-.mobileHamBudger {
-  margin-top: 10px;
-  display: block;
-  position: relative;
-  left: 15rem;
 }
 }
 
@@ -228,13 +217,9 @@ Excalidraw styling overrides
     margin-top: -5px;
   }
   .whiteboard .shareButton {
-    /* left: -15px;
-        top: -10px;
-        bottom: 13.2rem; */
-        position: absolute; /* Ensure positioning is relative to the container or viewport */
-        left: calc(-15px);
-        top: calc(-10px);
-        bottom: calc(136vh - 13.2rem - 10px);
+    left: -15px;
+    top: -10px;
+    bottom: 21rem;
   }
   .excalidraw--mobile {
     background-color: #e9e7e8 !important;
@@ -249,7 +234,7 @@ Excalidraw styling overrides
     margin-top: 10px;
     display: block;
     position: relative;
-    left: 6rem;
+    left: 15rem;
   }
   .excalidraw .App-toolbar-content {
     justify-content: unset;
@@ -258,7 +243,7 @@ Excalidraw styling overrides
     margin-left: 14rem;
   }
   .colorBarContainer {
-    margin-top: 4%;
+    margin-top: 40%;
     margin-left: 0rem;
   }
   .excalidraw .welcome-screen-center {
@@ -267,9 +252,9 @@ Excalidraw styling overrides
   .undo-redo-buttons {
     display: none !important;
   } 
-  /* .App-toolbar--mobile {
+  .App-toolbar--mobile {
     margin-left: 0px !important;
-  } */
+  }
   .excalidraw .App-toolbar-content {
     display: none !important;
   }
@@ -281,14 +266,11 @@ Excalidraw styling overrides
 
 /* Target mobile devices in landscape orientation */
 @media (min-width: 480px) and (max-width: 767px) and (orientation: landscape) {
+  .mobileNav {
+    display: none !important;
+  }
   .whiteboard .shareButton {
-    /* left: -15px;
-        top: -10px;
-        bottom: 13.2rem; */
-        position: absolute;
-        left: calc(-15px);
-        top: calc(-10px);
-        bottom: calc(136vh - 13.2rem - 10px);
+    bottom: auto;
   }
   .excalidraw--mobile {
     display: none !important;
@@ -318,15 +300,33 @@ Excalidraw styling overrides
   .undo-redo-buttons {
     display: none !important;
   } 
+  .excalidraw .App-top-bar {
+    display: none;
+  }
   .excalidraw canvas {
     margin-top: 0px;
   }
-  .mobileHamBudger{
-    display: block;
-  }
-
 }
 
+@media only screen and (max-width: 768px), 
+       only screen and (max-device-width: 768px) and (orientation: landscape), 
+       only screen and (max-device-height: 768px) {
+        .mobileNav {
+          display: none !important;
+        }
+        .excalidraw .App-top-bar {
+          display: none !important;
+        }
+        /* .excalidraw--mobile {
+          display: none !important;
+        } */
+        .toolbar {
+          display: none !important;
+        }
+        .excalidraw--mobile {
+          margin-top: -100px;
+        }
+}
 .visible {
   display: flex;
 }
