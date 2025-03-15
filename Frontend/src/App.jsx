@@ -173,7 +173,7 @@ import LeanerNavbar from "./Componets/LeanerNavbar";
 import TutorNavbar from "./Componets/TutorNavbar";
 import Paymentmethod from "./Componets/Paymentmethod";
 import WhiteBoard from "./Componets/WhiteBoard";
-import CalanderTimeSelect from "./Componets/CalanderTimeSelect";
+import CalanderTimeSelect from "./Componets/CalanderTImeSelect";
 import { Provider } from "react-redux";
 import store from "./app/store";
 
