@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MenuOutlined } from "@ant-design/icons";
-import logo from "../assets/Image/Logo.png";
+// import logo from "../assets/Image/Logo.png";
 import { CgClose } from "react-icons/cg";
 import { GoDotFill } from "react-icons/go";
 import { IoSearch } from "react-icons/io5";
@@ -57,8 +57,11 @@ const LeanerNavbar = () => {
         <aside className="hidden lg:flex flex-col w-64 h-screen bg-black text-white fixed">
       {/* Logo Section */}
       <div className="p-6 text-center">
-        <img src={logo} alt="Logo" className="mx-auto w-28" />
-      </div>
+            {/* <img src={logo} alt="Logo" className="mx-auto w-28" /> */}
+            <h2 className=" text-white my-auto font-bold text-xl lg:text-2xl justify-center items-center py-2 mt-1">
+              Academy GPT
+            </h2>
+          </div>
 
       {/* Menu Items */}
       <div className="flex-1">
@@ -93,10 +96,13 @@ const LeanerNavbar = () => {
 
       {/* Drawer for mobile/tablet */}
       <div className=" lg:hidden fixed top-0 px-5 left-0 w-full z-50 bg-black text-white flex items-center justify-between p-2">
-        <div className="items-center">
-          <img src={logo} alt="Logo" className="w-24 md:w-28 h-8" />
-        </div>
-        <div className="flex space-x-4">
+      <div className="items-center">
+            {/* <img src={logo} alt="Logo" className="w-24 md:w-28 h-8" /> */}
+            <h2 className=" text-white my-auto font-bold text-lg lg:text-2xl justify-center items-center py-2 mt-1">
+              Academy GPT
+            </h2>
+          </div>
+        <div className=" hidden space-x-4">
           <img
             src={person}
             alt="User"
@@ -107,7 +113,7 @@ const LeanerNavbar = () => {
           />
           <IoSearch className="my-auto mt-1" size={25} />
           <button onClick={toggleDrawer}>
-            <MenuOutlined className="text-white text-2xl" />
+            <MenuOutlined className="text-white hidden text-2xl" />
           </button>
         </div>
       </div>
@@ -115,7 +121,7 @@ const LeanerNavbar = () => {
     {/* Slide-out menu for mobile/tablet */}
     <div
       className={`${
-        collapsed ? "hidden" : "block"
+        collapsed ? "hidden" : "hidden"
       } fixed inset-0 bg-white bg-opacity-75 z-40 lg:hidden`}
       onClick={toggleDrawer}>
       <div
@@ -179,7 +185,7 @@ const LeanerNavbar = () => {
             src={person}
             alt="User"
             onClick={handleProfileClick} // Handle profile click for mobile
-            className={`w-9 h-9 my-auto rounded-full ${
+            className={`w-9 h-9 my-auto hidden rounded-full ${
               activeComponent === "profile" ? "border-2 border-primary" : ""
             }`}
           />

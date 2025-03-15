@@ -6,6 +6,7 @@ import { LuSendHorizonal } from "react-icons/lu";
 import Webcam from "react-webcam";
 import { IoMdAttach } from "react-icons/io";
 import ReactMarkdown from "react-markdown";
+import { useTranslation } from "react-i18next";
 
 import "./AskQuestion.css";
 
@@ -15,12 +16,13 @@ function AskQuestion() {
   const [file, setFile] = useState(null);
   const [cameraMode, setCameraMode] = useState(false);
   const [pastQA, setPastQA] = useState([]);
-  const [preferredAnswer, setPreferredAnswer] = useState("aiAnswer");
+  const [preferredAnswer, setPreferredAnswer] = useState("onlineClassroom");
   const [capturedImage, setCapturedImage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState(null);
   const [userLanguage, setUserLanguage] = useState("en");
   const [isMobileDevice, setIsMobileDevice] = useState(false);
+  const [loading, setLoading] = useState(false); 
 
   const chatEndRef = useRef(null);
   const webcamRef = useRef(null);
@@ -28,6 +30,8 @@ function AskQuestion() {
   const mobileCameraInputRef = useRef(null);
 
   const navigate = useNavigate(); 
+  const { t } = useTranslation();
+
 
   useEffect(() => {
     const detectLanguage = () => {
@@ -94,7 +98,7 @@ function AskQuestion() {
      
       const newQA = {
         question: inputText,
-        answer: "Successfully sent",
+        answer:"Sorunuz Paylaşıldı",
         image: null,
         timestamp: new Date().toISOString(),
       };
@@ -103,9 +107,11 @@ function AskQuestion() {
       setInputText("");
       setFile(null);
       setCapturedImage("");
+      setLoading(true);
 
    
       setTimeout(() => {
+        setLoading(false);
         navigate("/leanernavbar/whiteboard");
       }, 3000);
       return;
@@ -116,10 +122,10 @@ function AskQuestion() {
 
     let fullQuestion = "";
     if (subject) {
-      fullQuestion = subject ? `Subject:${subject}\n`  : "";
+      fullQuestion = `${subject ? `Subject: ${subject}\n` : ""}`;
     }
     if (inputText) {
-      // fullQuestion += Question: ${inputText};
+      fullQuestion += `Question: ${inputText}`;
     }
 
     try {
@@ -203,7 +209,7 @@ function AskQuestion() {
   const startNewConversation = () => {
     setConversationId(null);
     setSubject("");
-    setPastQA([]); // Clear previous Q&A
+    setPastQA([]); 
   };
 
   const renderAnswer = (answer) => {
@@ -225,6 +231,16 @@ function AskQuestion() {
       </div>
     );
   };
+
+  if (loading || isLoading) {
+    // Render spinner during the 3-second delay
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
@@ -282,7 +298,9 @@ function AskQuestion() {
 
           <div className="sticky z-50 bottom-0 space-y-2 xl:w-full bg-white w-full">
             <div className="flex items-center space-x-5 px-2">
-              <p className="text-lg font-semibold">Preferred Answer</p>
+              <p className="text-lg font-semibold">
+              {t("Preferred Answer")}
+              </p>
               <div className="flex space-x-5">
                 <div className="flex items-center space-x-2">
                   <input
@@ -294,7 +312,8 @@ function AskQuestion() {
                     onChange={(e) => setPreferredAnswer(e.target.value)}
                     className="form-radio"
                   />
-                  <label htmlFor="onlineClassroom">Online Classroom</label>
+                  <label htmlFor="onlineClassroom">
+                  {t("Online Classroom")}</label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <input
@@ -306,7 +325,8 @@ function AskQuestion() {
                     onChange={(e) => setPreferredAnswer(e.target.value)}
                     className="form-radio"
                   />
-                  <label htmlFor="aiAnswer">AI</label>
+                  <label htmlFor="aiAnswer">
+                  {t("AI")}</label>
                 </div>
               </div>
             </div>
@@ -340,7 +360,7 @@ function AskQuestion() {
               <input
                 className="flex-1 px-4 py-2 focus:outline-none"
                 type="text"
-                placeholder="Ask your question..."
+                placeholder={t("Ask your Question")}
                 value={inputText}
                 onChange={handleInputChange}
                 onKeyPress={handleKeyPress}
