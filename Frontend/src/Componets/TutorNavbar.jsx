@@ -9,11 +9,13 @@ import { IoIosArrowDropdown } from "react-icons/io";
 import logo from "../assets/Image/Logo.png";
 import person from "../assets/Image/person.png";
 import { fetchTeacherData } from "../features/teacherSlice";
+import { useTranslation } from "react-i18next";
 
 const TutorNavbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   
 
@@ -56,15 +58,15 @@ const TutorNavbar = () => {
   const isWhiteBoardPage = () => window.location.href.includes("whiteboard");
 
   const menuItems = [
-    { label: "DASHBOARD", key: "dashboard", path: "/tutornavbar/dashboard" },
+    { label: t("Dashboard"), key: "dashboard", path: "/tutornavbar/dashboard" },
     {
-      label: "LEARNER QUESTIONS",
+      label: t("LEARNER QUESTIONS"),
       key: "learnerquestions",
       path: "/tutornavbar/tutorleanerquestion",
     },
-    { label: "CONTACT", key: "contact", path: "/tutornavbar/contact" },
-    { label: "REVIEW", key: "review", path: "/tutornavbar/review" },
-    { label: "ABOUT US", key: "aboutus", path: "/aboutpage" },
+    { label: t("CONTACT"), key: "contact", path: "/tutornavbar/contact" },
+    { label: t("REVIEW"), key: "review", path: "/tutornavbar/review" },
+    { label: t("ABOUT US"), key: "aboutus", path: "/aboutpage" },
   ];
 
   if (loading) {
@@ -132,7 +134,7 @@ const TutorNavbar = () => {
         </div>
         <div onClick={handleLogout} className="px-12 p-4">
           <button className="bg-primary font-semibold w-full text-white py-2 rounded-md">
-            Logout
+            {t("Logout")}
           </button>
         </div>
       </aside>

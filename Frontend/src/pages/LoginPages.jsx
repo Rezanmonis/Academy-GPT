@@ -234,6 +234,7 @@ import facebook from "../assets/Image/facebook.png";
 import google from "../assets/Image/google.png";
 import apple from "../assets/Image/apple.png";
 import login from "../assets/Image/Login.png";
+import { useTranslation } from "react-i18next";
 
 const LoginPages = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -244,6 +245,7 @@ const LoginPages = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
 
@@ -328,14 +330,14 @@ const LoginPages = () => {
       <LoginNavbar />
       <div className="lg:flex mt-8 px-8 h-screen lg:h-full relative font-urbanist">
         <div className="lg:w-1/2 md:px-16 lg:px-20 md:my-auto">
-          <h2 className="text-center text-4xl font-bold">LOGIN</h2>
+          <h2 className="text-center text-4xl capitalize font-bold">{t("LOGIN")}</h2>
           <p className="text-center text-black/70 text-lg">
-            Login to access your account
+            {t("Login to access your account")}
           </p>
           <form className="py-5 space-y-4" onSubmit={(e) => e.preventDefault()}>
             <input
               type="email"
-              placeholder="Email"
+              placeholder={t("Email")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -358,7 +360,7 @@ const LoginPages = () => {
               )}
               <input
                 type={passwordVisible ? "text" : "password"}
-                placeholder="Password"
+                placeholder={t("Password")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-2 pl-5 border-[1px] border-black rounded-lg"
@@ -375,10 +377,10 @@ const LoginPages = () => {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   disabled={isLoading}
                 />
-                Remember me
+                {t("Remember me")}
               </label>
               <Link to="/forgotpassword">
-                <p className="text-sm text-primary">Forgot Password?</p>
+                <p className="text-sm text-primary">{t("Forgot Password")}?</p>
               </Link>
             </div>
             <button
@@ -393,14 +395,14 @@ const LoginPages = () => {
             </button>
           </form>
           <p className="text-center text-sm py-2 font-medium">
-            Don&apos;t have an account?{" "}
+            {t("Don't have an account")}?{" "}
             <Link to="/signuppages" className="text-primary">
-              Sign up
+             {t("Sign up")}
             </Link>
           </p>
           <div className="flex py-5">
             <hr className="w-1/2 border-t-[0.5px] h-1 border-[#313131] my-auto" />
-            <p className="whitespace-nowrap text-sm px-2">Or login with</p>
+            <p className="whitespace-nowrap text-sm px-2">{t("Or login with")}</p>
             <hr className="w-1/2 border-t-[0.5px] h-1 border-[#313131] my-auto" />
           </div>
           <div className="flex space-x-3">
