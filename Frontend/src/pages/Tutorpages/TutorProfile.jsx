@@ -14,6 +14,7 @@ import CustomCalendar from "../../Componets/CustomCalander";
 import { fetchTeacherData } from "../../features/teacherSlice";
 import { useSelector, useDispatch } from "react-redux";
 import person from "../../assets/Image/person.png";
+import { useTranslation } from 'react-i18next';
 
 
 const TutorProfile = () => {
@@ -23,6 +24,7 @@ const TutorProfile = () => {
    const { teacher: combinedProfile, loading, error, isFetched } = useSelector(
       (state) => state.teacher
     );
+    const { t } = useTranslation();
 
   const handleProfileAddClick = () => {
     navigate("tutoraddprofile");
@@ -90,7 +92,7 @@ const TutorProfile = () => {
                     <button
                       onClick={handleProfileAddClick}
                       className="p-1 px-2 text-white rounded-md bg-primary text-xs md:text-sm xl:text-lg font-bold">
-                      Edit Profile
+                      {t("Edit Profile")}
                     </button>
                   </div>
                 </div>
@@ -102,7 +104,7 @@ const TutorProfile = () => {
                   </p>
                 </div>
                 <div>
-                  <p>Ranking</p>
+                  <p>{t("Ranking")}</p>
                   <div className="flex text-primary space-x-1">
                     <IoMdStar className="size-6 md:size-5 xl:size-7" />
                     <IoMdStar className="size-6 md:size-5 xl:size-7" />
@@ -293,7 +295,7 @@ const TutorProfile = () => {
 
             <div>
               <h2 className="text-base md:text-lg xl:text-xl font-semibold">
-                Basic Information
+               {t("Basic Information")}
               </h2>
               <p className="text-[9.49px] md:text-sm lg:text-base xl:text-lg text-black/80 font-normal">
               {combinedProfile.teacher_profile?.basic_info || "N/A"}
@@ -301,7 +303,7 @@ const TutorProfile = () => {
             </div>
             <div>
               <h2 className="text-base font-semibold md:text-lg xl:text-xl">
-                Skill
+                {t("Skill")}
               </h2>
               <p className="text-[9.49px] md:text-sm lg:text-base xl:text-lg text-black/80 font-normal">
               {combinedProfile.teacher_profile?.skill || "N/A"}
@@ -309,7 +311,7 @@ const TutorProfile = () => {
             </div>
             <div>
               <h2 className="text-base md:text-lg xl:text-xl font-semibold">
-                Education
+                {t("Education")}
               </h2>
               <p className="text-[9.49px] md:text-sm lg:text-base xl:text-lg text-black/80 font-normal">
               {combinedProfile.teacher_profile?.education || "N/A"}
@@ -317,7 +319,7 @@ const TutorProfile = () => {
             </div>
             <div>
               <h2 className="text-base md:text-lg xl:text-xl font-semibold">
-                Work Experience
+               {t("Work Experience")}
               </h2>
               <p className="text-[9.49px] md:text-sm lg:text-base xl:text-lg text-black/80 font-normal">
               {combinedProfile.teacher_profile?.work_experience || "N/A"} 
