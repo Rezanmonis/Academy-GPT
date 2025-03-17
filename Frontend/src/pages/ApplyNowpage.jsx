@@ -9,6 +9,7 @@ import "react-phone-input-2/lib/style.css";
 import { IoIosArrowForward } from "react-icons/io";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import { toast } from 'react-toastify';
 
 // Languages list
 const initialLanguages = [
@@ -36,8 +37,12 @@ const ApplyNowPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState(null);
+  const [verifiactionToken,setVerificationToken] = useState()
+  const [userData,setUserData] = useState()
+
   const navigate = useNavigate();
   const { t } = useTranslation();
+const baseURL = import.meta.env.VITE_BASE_URL
 
   const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
   const toggleConfirmPasswordVisibility = () =>
@@ -81,19 +86,22 @@ const ApplyNowPage = () => {
           languages: formattedLanguages,
         }
       );
-
       if (response.status === 201) {
         setShowNumberCode(true);
+        setUserData(response.data.data)
       }
     } catch (error) {
-      if (error.response) {
+      if (error.response.status==400) {
+
         console.error("Response data:", error.response.data); // Backend response
         console.error("Status code:", error.response.status);
         console.error("Headers:", error.response.headers);
-        setError(
-          error.response.data.detail ||
-            "Server error occurred. Please try again."
-        );
+        // setError(
+        //   error.response.data ||
+        //     "Server error occurred. Please try again."
+        // );
+        toast.error(error.response.data?.email[0])
+
       } else if (error.request) {
         console.error("Request error:", error.request);
         setError("No response from server. Please check your connection.");
@@ -125,6 +133,78 @@ const ApplyNowPage = () => {
     setLanguages([...languages, newLanguage]);
     setSelectedLanguages([...selectedLanguages, newLanguage]);
   };
+
+  const handleVerifyOTP =async ()=>{
+    try {
+      const response = await axios.post(
+        `${baseURL}auth/verify-mfa`,
+        {
+          user:userData.user,
+          token:verifiactionToken
+        }
+      );
+
+      if (response.data.statusCode === 200) {
+        sessionStorage.setItem("token", response.data.data.access);
+
+        navigate("/tutornavbar");
+
+      }
+      console.log("resonseee===>",response)
+    } catch (error) {
+      if ( error.response.status===400) {
+
+        console.error("Response data:", error.response.data); // Backend response
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+        setError(
+          
+            "Server error occurred. Please try again."
+        );
+        toast.error(error.response.data?.detail)
+      } else if (error.request) {
+        // console.error("Request error:", error.request);
+        setError("No response from server. Please check your connection.");
+      } else {
+        // console.error("Error", error.message);
+        setError("Registration failed. Please try again.");
+      }
+    }
+  }
+
+  const handleResendOTP =async ()=>{
+    try {
+      const response = await axios.post(
+        `${baseURL}auth/resend-mfa-code`,
+        {
+          email:email
+        }
+      );
+
+      if (response.status === 201) {
+        setShowNumberCode(true);
+      }
+    } catch (error) {
+      if ( error.response.status===400) {
+
+        console.error("Response data:", error.response.data); // Backend response
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+        setError(
+          
+            "Server error occurred. Please try again."
+        );
+        toast.error(error.response.data?.detail)
+      } else if (error.request) {
+        // console.error("Request error:", error.request);
+        setError("No response from server. Please check your connection.");
+      } else {
+        // console.error("Error", error.message);
+        setError("Registration failed. Please try again.");
+      }
+    }
+  }
+
 
   return (
     <>
@@ -308,13 +388,17 @@ const ApplyNowPage = () => {
               name="code"
               id="code"
               placeholder= {t("Enter Verification Code")}
+              value={verifiactionToken}
+              onChange={(e)=>setVerificationToken(e.target.value)}
             />
             <div className="space-y-2">
-              <button className="p-2 w-full flex justify-center text-lg xl:text-xl font-medium">
+              <button className="p-2 w-full flex justify-center text-lg xl:text-xl font-medium"
+              onClick={handleResendOTP}
+              >
                 {t("Resend Code")}
               </button>
               <button
-                onClick={() => navigate("/tutornavbar")}
+                onClick={handleVerifyOTP}
                 className="p-2 w-full flex justify-center text-xl xl:text-2xl font-bold rounded-md text-white bg-primary">
                 {t("Verify")}
               </button>
