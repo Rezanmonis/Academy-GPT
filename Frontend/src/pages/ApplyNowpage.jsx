@@ -158,7 +158,7 @@ const baseURL = import.meta.env.VITE_BASE_URL
       } else if (error.request) {
         setError("No response from server. Please check your connection.");
       } else {
-=        setError("Registration failed. Please try again.");
+    setError("Registration failed. Please try again.");
       }
     }
   }
