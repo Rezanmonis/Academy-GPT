@@ -39,6 +39,10 @@
   "Remember me":"Beni Hatırla",
   "Or login with":"Veya şununla giriş yapın",
   "Dashboard": "Kontrol Paneli",
+  "ASK QUESTION":"Soru Sor",
+  "ONE ON ONE":"Bire Bir",
+  "GROUP (4)":"Grup",
+  "GROUP (4+)":"Grup (4+)",
   "LEARNER QUESTIONS": "Öğrenci Soruları",
   "CONTACT": "İletişim",
   "REVIEW": "Göz At",
@@ -70,5 +74,16 @@
   "Message":"Mesaj",
   "Send Message":"Gönder",
   "Write a Review":"Bir Yorum Yazın",
-  "Total":"Toplam"
+  "Total":"Toplam",
+   "SIGN UP":"Öğrenci",
+  "Create your student account.":"Hesabını oluştur.",
+  "Tutors Found":"Öğretmen bulundu",
+  "fit your Choices":"Aramanıza uyan",
+  "Filters":"Filtrele",
+  "hours teaching students":"Saat ders verdi",
+  "Certified":"Tecrübeli",
+  "Credentialed multiple subject teacher":"Tecrübeli öğretmen",
+  "View Profile":"Profili Görüntüle",
+  "Language not specified":"Dil belirtilmemiş",
+  "No skills listed":"Beceri listelenmedi"
 }
