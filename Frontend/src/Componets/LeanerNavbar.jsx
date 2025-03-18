@@ -228,6 +228,7 @@ import { IoSearch } from "react-icons/io5";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import person from "../assets/Image/person.png";
+import { useTranslation } from "react-i18next";
 
 const LeanerNavbar = () => {
   const dispatch = useDispatch();
@@ -237,6 +238,7 @@ const LeanerNavbar = () => {
   const { user, loading, error } = useSelector((state) => state.user);
   const [collapsed, setCollapsed] = useState(true);
   const [activeComponent, setActiveComponent] = useState("");
+  const { t } = useTranslation();
 
   // Fetch user data only if it's not available
   useEffect(() => {
@@ -275,15 +277,15 @@ const LeanerNavbar = () => {
   const isWhiteBoardPage = () => window.location.href.includes("whiteboard");
 
   const menuItems = [
-    { label: "DASHBOARD", key: "dashboard", path: "/leanernavbar/dashboard" },
-    { label: "ONE ON ONE", key: "oneonone", path: "/leanernavbar/oneonone" },
-    { label: "GROUP (4)", key: "group4", path: "/leanernavbar/group4" },
-    { label: "GROUP (4+)", key: "group4plus", path: "/leanernavbar/group4plus" },
-    { label: "LEARNER QUESTIONS", key: "learnerquestions", path: "/leanernavbar/leanerquestions" },
-    { label: "ASK QUESTION", key: "askquestion", path: "/leanernavbar/askquestion" },
-    { label: "CONTACT", key: "contact", path: "/leanernavbar/contact" },
-    { label: "REVIEW", key: "review", path: "/leanernavbar/review" },
-    { label: "ABOUT US", key: "aboutus", path: "/aboutpage" },
+    { label: t("Dashboard"), key: "dashboard", path: "/leanernavbar/dashboard" },
+    { label: t("ONE ON ONE"), key: "oneonone", path: "/leanernavbar/oneonone" },
+    { label: t("GROUP (4)"), key: "group4", path: "/leanernavbar/group4" },
+    { label: t("GROUP (4+)"), key: "group4plus", path: "/leanernavbar/group4plus" },
+    { label: t("LEARNER QUESTIONS"), key: "learnerquestions", path: "/leanernavbar/leanerquestions" },
+    { label: t("ASK QUESTION"), key: "askquestion", path: "/leanernavbar/askquestion" },
+    { label: t("CONTACT"), key: "contact", path: "/leanernavbar/contact" },
+    { label:t("REVIEW"), key: "review", path: "/leanernavbar/review" },
+    { label: t("ABOUT US"), key: "aboutus", path: "/aboutpage" },
   ];
 
   if (loading)

@@ -11,7 +11,7 @@ const Review = () => {
 
   return (
     <>
-      <div className="font-urbanist px-3">
+      <div className="font-urbanist px-3 py-2">
         <div className="flex justify-between">
           <div>
               <Link
