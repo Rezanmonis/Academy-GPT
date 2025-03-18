@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import Modal from "./CustomModel";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -253,12 +254,18 @@ function MeetingScheduler({
         getSlots();
       }
     } catch (error) {
+      if(error?.response?.status===400){
+
+        toast.error(error?.response?.data?.non_field_errors[0])
+      }
+      console.error("error ===>", error?.response?.data?.non_field_errors[0]);
       console.error("error ===>", error);
+
     }
   };
 
   return (
-    <div className="flex flex-col items-center w-[45vw]">
+    <div className="flex flex-col items-center">
       <h1 className="text-3xl font-bold text-center mb-8">
         When would you like to meet?
       </h1>
@@ -311,20 +318,18 @@ function MeetingScheduler({
               {/* Time slots */}
               <div className="w-full space-y-4">
                 {timeSlots.map((time, timeIndex) => (
-                  <button
-                    key={`${dateIndex}-${timeIndex}`}
-                    className={`w-full py-3 border border-gray-300 rounded-md text-gray-700 hover:border-orange-500 transition-colors
-                      ${
-                        selectedTimeSlot === `${dateIndex}-${timeIndex}`
-                          ? "border-orange-500 border-2"
-                          : ""
-                      }`}
-                    onClick={() =>
-                      handleTimeSlotSelect(dateIndex, timeIndex, time)
-                    }
-                  >
-                    {time}
-                  </button>
+                <button
+                key={`${dateIndex}-${timeIndex}`}
+                className={`w-full py-3 border border-gray-300 rounded-md text-gray-700 transition-colors 
+                  ${
+                    selectedTimeSlot === `${dateIndex}-${timeIndex}`
+                      ? "bg-orange-500 text-white border-orange-500 border-2"
+                      : "hover:border-orange-500 hover:bg-orange-100"
+                  }`}
+                onClick={() => handleTimeSlotSelect(dateIndex, timeIndex, time)}
+              >
+                {time}
+              </button>
                 ))}
               </div>
             </div>

@@ -25,7 +25,7 @@ export default function CustomModal({ isOpen, onClose, title, children }) {
       ariaHideApp={false} // Add this to prevent errors in development
       shouldCloseOnOverlayClick={true}
       shouldCloseOnEsc={true}
-      className="bg-white rounded-lg shadow-lg w-[50vw] max-h-[90vh] overflow-y-auto p-4 outline-none"
+      className="bg-white rounded-lg shadow-lg w-[96vw] sm:w-[50vw] max-h-[90vh] overflow-y-auto p-4 outline-none"
       overlayClassName="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
     >
       <div className="border-b pb-4 flex justify-between items-center">
@@ -34,7 +34,7 @@ export default function CustomModal({ isOpen, onClose, title, children }) {
           ✕
         </button>
       </div>
-      <div className="p-4">{children}</div>
+      <div className="">{children}</div>
     </Modal>
   )
 }
