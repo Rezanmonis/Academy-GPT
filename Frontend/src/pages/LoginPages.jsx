@@ -235,6 +235,8 @@ import google from "../assets/Image/google.png";
 import apple from "../assets/Image/apple.png";
 import login from "../assets/Image/Login.png";
 import { useTranslation } from "react-i18next";
+import { toast } from 'react-toastify';
+
 
 const LoginPages = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -246,6 +248,10 @@ const LoginPages = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const [showNumberCode, setShowNumberCode] = useState(false);
+  const [verifiactionToken,setVerificationToken] = useState()
+  const [userData,setUserData] = useState()
+  const baseURL = import.meta.env.VITE_BASE_URL
 
   const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
 
@@ -279,10 +285,14 @@ const LoginPages = () => {
         { email: email.trim(), password },
         { headers: { "Content-Type": "application/json" } }
       );
-
+      console.log("ress login",response)
+      if (response.status === 202) {
+        setShowNumberCode(true);
+        setUserData(response.data)
+      }
       if (response.data?.statusCode === 200 && response.data?.data?.access) {
         const { access, user } = response.data.data;
-
+        setUserData
         if (rememberMe) {
           localStorage.setItem("token", access);
         } else {
@@ -305,7 +315,10 @@ const LoginPages = () => {
         }
       } else {
         setError("Invalid response from server.");
-      }
+        toast.error(response.data.detail )}
+        // setShowNumberCode(true);
+
+
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.detail || "Login failed.");
@@ -324,6 +337,100 @@ const LoginPages = () => {
     if (isLoading) return;
     // Add social login logic here if needed
   };
+
+  const handleVerifyOTP =async ()=>{
+    console.log("calling")
+    try {
+      console.log("user+++++>",userData.user)
+      const response = await axios.post(
+        `${baseURL}auth/verify-mfa`,
+        {
+          user:userData.user,
+          token:verifiactionToken
+        }
+      );
+console.log("calllllllll---.",response)
+      if (response.data.statusCode === 200) {
+        const responseData = response.data.data.user
+        sessionStorage.setItem("token", response.data.data.access);
+
+        if (responseData.is_student) {
+          dispatch(
+            updateUser({
+              ...responseData,
+              username: `${user.first_name} ${user.last_name}`,
+            })
+          );
+          navigate("/leanernavbar");
+        } else if (responseData.is_teacher) {
+          dispatch(fetchTeacherData()); // Corrected to fetch teacher profile
+          navigate("/tutornavbar");
+        } else {
+          setError("Unknown user role.");
+        }
+
+
+
+      }
+      console.log("resonseee===>",response)
+    } catch (error) {
+      console.log("errr===>",error)
+
+      if ( error?.response?.status===400) {
+
+        console.error("Response data:", error.response.data); // Backend response
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+        setError(
+          
+            "Server error occurred. Please try again."
+        );
+        toast.error(error.response.data?.detail)
+      } else if (error.request) {
+        // console.error("Request error:", error.request);
+        setError("No response from server. Please check your connection.");
+      } else {
+        // console.error("Error", error.message);
+        setError("Registration failed. Please try again.");
+      }
+    }
+  }
+
+  const handleResendOTP =async ()=>{
+    try {
+      const response = await axios.post(
+        `${baseURL}auth/resend-mfa-code`,
+        {
+          email:email
+        }
+      );
+
+      if (response.status === 201) {
+        setShowNumberCode(true);
+      }
+    } catch (error) {
+      if ( error.response.status===400) {
+
+        console.error("Response data:", error.response.data); // Backend response
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+        setError(
+          
+            "Server error occurred. Please try again."
+        );
+        toast.error(error.response.data?.detail)
+      } else if (error.request) {
+
+        setError("No response from server. Please check your connection.");
+      } else {
+
+        setError("Registration failed. Please try again.");
+      }
+    }
+  }
+
+console.log("userDaa",userData)
+
 
   return (
     <>
@@ -435,6 +542,39 @@ const LoginPages = () => {
           </div>
         </div>
       </div>
+      {showNumberCode && (
+        <div className="fixed top-0 left-0 w-full h-full font-urbanist px-10 bg-black bg-opacity-60 z-50 flex justify-center items-center">
+          <div className="bg-white rounded-xl p-6 space-y-3 shadow-xl px-7 lg:w-5/12 xl:w-2/6">
+            <h2 className="font-semibold text-center whitespace-nowrap text-2xl xl:text-[26px]">
+              {t("Enter Verification ")}
+              <br />
+              {t("Code Just Sent To Phone No.")}
+              <br />
+              {t("Address")}
+            </h2>
+            <input
+              className="w-full p-2 pl-5 xl:p-3 border border-black rounded-lg focus:outline-primary"
+              name="code"
+              id="code"
+              placeholder= {t("Enter Verification Code")}
+              value={verifiactionToken}
+              onChange={(e)=>setVerificationToken(e.target.value)}
+            />
+            <div className="space-y-2">
+              <button className="p-2 w-full flex justify-center text-lg xl:text-xl font-medium"
+              onClick={handleResendOTP}
+              >
+                {t("Resend Code")}
+              </button>
+              <button
+                onClick={handleVerifyOTP}
+                className="p-2 w-full flex justify-center text-xl xl:text-2xl font-bold rounded-md text-white bg-primary">
+                {t("Verify")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
