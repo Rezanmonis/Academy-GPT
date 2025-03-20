@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { IoStarOutline, IoStar } from "react-icons/io5";
 import { GoPlusCircle } from "react-icons/go";
+import { useTranslation } from "react-i18next";
 
 const Writereview = () => {
   // State to store the selected number of stars
   const [selectedStars, setSelectedStars] = useState(1); // Default is 1 star
+const { t } = useTranslation();
 
   // Function to handle star click
   const handleStarClick = (starIndex) => {
@@ -25,10 +27,10 @@ const Writereview = () => {
           <div className="px-5 drop-shadow-md bg-[#F9F9F9] rounded-xl py-4 space-y-3 border-2 xl:space-y-6 lg:w-1/2">
             <div>
               <h2 className="text-primary lg:text-black font-semibold text-xl xl:text-3xl text-center lg:text-left">
-                Write a Review
+                {t("Write a Review")}
               </h2>
               <p className="text-center lg:text-left text-black/80">
-                Clearly state the issue or topic you need help with.
+                {t("Clearly state the issue or topic you need help with")}
               </p>
             </div>
             <div className="py-2 space-y-3">
@@ -37,7 +39,7 @@ const Writereview = () => {
                 type="text"
                 name="Title"
                 id="title"
-                placeholder="Title"
+                placeholder={t("Title")}
               />
               <textarea
                 className="p-2 border-[1px] border-black/60 w-full rounded-md focus:outline-primary"
@@ -45,7 +47,7 @@ const Writereview = () => {
                 id="message"
                 cols="20"
                 rows="8"
-                placeholder="Message"></textarea>
+                placeholder={t("Message")}></textarea>
             </div>
 
             {/* Star Rating Section */}
@@ -76,7 +78,7 @@ const Writereview = () => {
             {/* Post Button */}
             <div className="flex justify-center">
               <button className="p-1 px-4 text-lg font-semibold w-32 text-white bg-primary rounded-md">
-                Post
+                {t("Post")}
               </button>
             </div>
           </div>

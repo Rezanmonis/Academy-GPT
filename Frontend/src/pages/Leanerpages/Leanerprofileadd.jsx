@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchUserData, updateUser } from "../../features/userSlice";
 import axios from "axios";
 import person from "../../assets/Image/person.png";
+import { useTranslation } from "react-i18next";
 
 const initialLanguages = [
   { value: "en", label: "English" },
@@ -17,6 +18,7 @@ const LeanerProfileAdd = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, loading, error } = useSelector((state) => state.user);
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -169,7 +171,7 @@ const LeanerProfileAdd = () => {
               className="w-20 h-20 rounded-full border border-gray-300 object-cover"
             />
             <div className="text-orange-500 text-sm mt-2">
-              Click to change photo (Optional)
+             {t("Click to change photo")}(Optional)
             </div>
           </label>
           <input
@@ -182,17 +184,17 @@ const LeanerProfileAdd = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-4 mt-6">
-          <input type="text" name="first_name" placeholder="First Name" value={formData.first_name} onChange={handleUsernameChange} className="p-2 border border-gray-300 rounded-md" />
-          <input type="text" name="last_name" placeholder="Last Name" value={formData.last_name} onChange={handleChange} className="p-2 border border-gray-300 rounded-md" />
-          <input type="text" name="skill" placeholder="Skill" value={formData.skill} onChange={handleChange} className="p-2 border border-gray-300 rounded-md" />
-          <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} className="p-2 border border-gray-300 rounded-md" />
-          <input type="text" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} className="p-2 border border-gray-300 rounded-md" />
+          <input type="text" name="first_name" placeholder={t("First Name")} value={formData.first_name} onChange={handleUsernameChange} className="p-2 border border-gray-300 rounded-md" />
+          <input type="text" name="last_name" placeholder={t("Last Name")} value={formData.last_name} onChange={handleChange} className="p-2 border border-gray-300 rounded-md" />
+          <input type="text" name="skill" placeholder={t("Skill")} value={formData.skill} onChange={handleChange} className="p-2 border border-gray-300 rounded-md" />
+          <input type="email" name="email" placeholder={t("Email")} value={formData.email} onChange={handleChange} className="p-2 border border-gray-300 rounded-md" />
+          <input type="text" name="phone" placeholder={t("Phone")} value={formData.phone} onChange={handleChange} className="p-2 border border-gray-300 rounded-md" />
           <input type="date" name="dob" placeholder="Date of Birth" value={formData.dob} onChange={handleChange} className="p-2 border border-gray-300 rounded-md" />
           <CreatableSelect isMulti className="w-full rounded-md" options={languages} value={selectedLanguages} onChange={handleLanguageChange} onCreateOption={handleLanguageCreate} />
         </div>
 
         <button onClick={handleProfileUpdate} className="w-full mt-6 bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition">
-          Update Profile
+          {t("Update Profile")}
         </button>
       </div>
     </div>

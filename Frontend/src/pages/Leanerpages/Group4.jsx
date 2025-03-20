@@ -6,8 +6,9 @@ import { FaRegHeart } from "react-icons/fa6";
 import placeholderImg from "../../assets/Image/person.png";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const  Group4  = () => {
+const Group4 = () => {
   const [tutors, setTutors] = useState([]);
   const [filteredTutors, setFilteredTutors] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
@@ -20,6 +21,7 @@ const  Group4  = () => {
 const location = useLocation();
 const queryParams = new URLSearchParams(location.search);
 const subjectFromQuery = queryParams.get("subject");
+const { t } = useTranslation();
 
   useEffect(() => {
     const fetchTutors = async () => {
@@ -139,20 +141,20 @@ const subjectFromQuery = queryParams.get("subject");
             transition={{ delay: 0.3, type: "tween" }}>
             <h2 className="text-xs lg:text-sm xl:text-base font-normal">
               <span className="text-primary text-base lg:text-xl xl:text-2xl font-semibold">
-                {filteredTutors.length} Tutors Found
+                {filteredTutors.length}{ t("Tutors Found")}
               </span>{" "}
               {isFilterApplied
                 ? `for Subject: ${selectedSubject}`
-                : "fit your Choices"}
+                : t("fit your Choices")}
             </h2>
           </motion.div>
           <div className="my-auto">
             <button
               onClick={() => setShowFilter(true)}
               className="bg-primary p-1 px-3 rounded text-xs lg:text-sm xl:text-lg font-semibold text-white">
-              Filters
+             {t("Filters")}
             </button>
-          </div>
+          </div>  
         </div>
 
         {filteredTutors.map((tutor) => (
@@ -187,7 +189,7 @@ const subjectFromQuery = queryParams.get("subject");
                     </div>
                     <p className="flex text-xs font-medium md:text-sm xl:text-lg text-black/70 xl:pr-10 whitespace-nowrap md:whitespace-normal">
                       <LuClock3 className="my-auto md:my-0 mr-1 md:size-5 xl:size-6" />
-                      {tutor.hours || "N/A"} hours teaching students
+                      {tutor.hours || "N/A"} {t("hours teaching students")}
                     </p>
                   </div>
                 </div>
@@ -197,7 +199,7 @@ const subjectFromQuery = queryParams.get("subject");
                       <FaRegHeart className="size-4 md:size-5 xl:size-7" />
                     </div>
                     <button className="md:hidden absolute p-1 -bottom-12 text-base font-medium px-2 right-0 bg-[#056FD2] inline rounded-l-lg text-white">
-                      Certified
+                      {t("Certified")}
                     </button>
                     <button className="md:hidden absolute p-1 -bottom-[95px] text-base font-medium right-0 text-right inline rounded-l-lg bg-[#60AD56] text-white">
                       {tutor.subject || "N/A"}
@@ -218,10 +220,10 @@ const subjectFromQuery = queryParams.get("subject");
                   </p>
                 </div>
                 <p className="text-primary text-sm md:text-base xl:text-2xl">
-                  {tutor?.skill || "No skills listed"}
+                  {tutor?.skill || t("No skills listed")}
                 </p>
                 <p className="text-primary text-sm md:text-base xl:text-2xl">
-                  Credentialed multiple subject teacher
+                  {t("Credentialed multiple subject teacher")}
                 </p>
                 <p className="text-[9.73px] md:text-[13px] xl:text-lg text-black/60 font-normal">
                   {tutor.description || "No description provided."}
@@ -231,7 +233,7 @@ const subjectFromQuery = queryParams.get("subject");
               <div className="flex justify-between py-2">
                 <div className="flex space-x-1 my-auto">
                   <p className="text-[10px] md:text-xs xl:text-sm font-semibold my-auto">
-                    {tutor.language || "Language not specified"}
+                    {tutor.language || t("Language not specified")}
                   </p>
                   <div className="pl-10">
                     <button className="hidden md:inline p-1 px-2 text-base xl:text-lg font-medium rounded-lg bg-[#60AD56] text-white">
@@ -244,7 +246,7 @@ const subjectFromQuery = queryParams.get("subject");
                   <Link
                     to={`tutordetails/${tutor.id}`}
                     className="p-2 rounded-md text-xs md:text-sm xl:text-lg font-semibold text-white bg-primary">
-                    View Profile
+                    {t("View Profile")}
                   </Link>
                 </div>
               </div>
@@ -255,7 +257,7 @@ const subjectFromQuery = queryParams.get("subject");
         {showFilter && (
           <div className="fixed top-0 left-0 w-full h-full font-urbanist py-5 px-3 bg-black bg-opacity-60 z-50 flex justify-center items-center">
             <div className="bg-white space-y-4 rounded-xl p-5 shadow-xl w-full lg:w-5/12 xl:w-2/6">
-              <h2 className="text-2xl font-semibold">Filter</h2>
+              <h2 className="text-2xl font-semibold">{t("Filters")}</h2>
               <div className="space-y-2">
                 {/* Subject Select */}
                 <h3 className="text-2xl font-semibold">Subject</h3>
@@ -292,4 +294,4 @@ const subjectFromQuery = queryParams.get("subject");
   );
 };
 
-export default  Group4 ; 
+export default Group4; 
