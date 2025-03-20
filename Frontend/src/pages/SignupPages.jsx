@@ -209,9 +209,9 @@ const SignupPages = () => {
       <LoginNavbar />
       <div className="lg:flex mt-8 px-8 xl:py-5 relative font-urbanist">
         <div className="lg:w-1/2 md:px-16 lg:px-6 md:my-auto">
-          <h2 className="text-center text-4xl font-bold">SIGN UP</h2>
+          <h2 className="text-center text-4xl font-bold">{t("SIGN UP")}</h2>
           <p className="text-center text-black/70 text-lg">
-            Create your student account.
+            {t("Create your student account.")}
           </p>
 
           <form className="py-5 space-y-4">
@@ -219,7 +219,7 @@ const SignupPages = () => {
               <input
                 type="text"
                 name="firstName"
-                placeholder="First Name"
+                placeholder={t("First Name")}
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
@@ -227,7 +227,7 @@ const SignupPages = () => {
               <input
                 type="text"
                 name="lastName"
-                placeholder="Last Name"
+                placeholder={t("Last Name")}
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
@@ -238,7 +238,7 @@ const SignupPages = () => {
               <input
                 type="email"
                 name="email"
-                placeholder="Email"
+                placeholder={t("Email")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
@@ -277,7 +277,7 @@ const SignupPages = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
-                placeholder="Password"
+                placeholder={t("CPassword")}
               />
             </div>
 
@@ -301,7 +301,7 @@ const SignupPages = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
-                placeholder="Confirm Password"
+                placeholder={t("Confirm Password")}
               />
             </div>
 
@@ -316,7 +316,7 @@ const SignupPages = () => {
             />
 
             <p className="text-sm font-medium py-1">
-              Select your preferred language(s) for lessons.
+            {t("Languages cap")}
             </p>
 
             {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -325,14 +325,14 @@ const SignupPages = () => {
               type="button"
               onClick={handleRegister}
               className="p-2 w-full text-2xl font-bold rounded-md text-white bg-primary">
-              Sign Up
+             {t("Sign Up")}
             </button>
           </form>
 
           <p className="text-center text-sm font-medium">
-            Already have an account?{" "}
+            {t("Already have an account")}?{" "}
             <span className="text-primary">
-              <Link to="/loginpage">Login</Link>
+              <Link to="/loginpage">{t("Login")}</Link>
             </span>
           </p>
 

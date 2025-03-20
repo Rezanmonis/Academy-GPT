@@ -198,7 +198,7 @@ const TutorNavbar = () => {
             onClick={handleLogout}
             className="bg-primary flex text-left p-1 font-bold w-full mt-6 text-white py-1 rounded-md">
             <GoDotFill className="my-auto ml-3 mr-3" />
-            Logout
+            {t("Logout")}
           </button>
         </div>
       </div>
