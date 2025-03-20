@@ -102,10 +102,8 @@ const SignupPages = () => {
         toast.error("Something went wrong ")
 
       } else if (error.request) {
-        console.error("Request error:", error.request);
         setError("No response from server. Please check your connection.");
       } else {
-        console.error("Error", error.message);
         setError("Registration failed. Please try again.");
       }
     }
@@ -129,7 +127,7 @@ const SignupPages = () => {
   const handleVerifyOTP =async ()=>{
     try {
       const response = await axios.post(
-        `${baseURL}auth/verify-mfa`,
+        `${baseURL}api/auth/verify-mfa`,
         {
           user:userData.user,
           token:verifiactionToken
@@ -153,9 +151,7 @@ const SignupPages = () => {
                 } 
 
       }
-      console.log("resonseee===>",response)
     } catch (error) {
-      console.log("err===>",error)
 
       if ( error.response.status===400) {
 
@@ -168,10 +164,8 @@ const SignupPages = () => {
         );
         toast.error(error.response.data?.detail)
       } else if (error.request) {
-        // console.error("Request error:", error.request);
         setError("No response from server. Please check your connection.");
       } else {
-        // console.error("Error", error.message);
         setError("Registration failed. Please try again.");
       }
     }
@@ -180,7 +174,7 @@ const SignupPages = () => {
   const handleResendOTP =async ()=>{
     try {
       const response = await axios.post(
-        `${baseURL}auth/resend-mfa-code`,
+        `${baseURL}api/auth/resend-mfa-code`,
         {
           email:email
         }
@@ -201,10 +195,8 @@ const SignupPages = () => {
         );
         toast.error(error.response.data?.detail)
       } else if (error.request) {
-        // console.error("Request error:", error.request);
         setError("No response from server. Please check your connection.");
       } else {
-        // console.error("Error", error.message);
         setError("Registration failed. Please try again.");
       }
     }

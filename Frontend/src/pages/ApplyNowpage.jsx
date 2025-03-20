@@ -96,17 +96,12 @@ const baseURL = import.meta.env.VITE_BASE_URL
         console.error("Response data:", error.response.data); // Backend response
         console.error("Status code:", error.response.status);
         console.error("Headers:", error.response.headers);
-        // setError(
-        //   error.response.data ||
-        //     "Server error occurred. Please try again."
-        // );
+      
         toast.error(error.response.data?.email[0])
 
       } else if (error.request) {
-        console.error("Request error:", error.request);
         setError("No response from server. Please check your connection.");
       } else {
-        console.error("Error", error.message);
         setError("Registration failed. Please try again.");
       }
     }
@@ -137,7 +132,7 @@ const baseURL = import.meta.env.VITE_BASE_URL
   const handleVerifyOTP =async ()=>{
     try {
       const response = await axios.post(
-        `${baseURL}auth/verify-mfa`,
+        `${baseURL}api/auth/verify-mfa`,
         {
           user:userData.user,
           token:verifiactionToken
@@ -150,7 +145,6 @@ const baseURL = import.meta.env.VITE_BASE_URL
         navigate("/tutornavbar");
 
       }
-      console.log("resonseee===>",response)
     } catch (error) {
       if ( error.response.status===400) {
 
@@ -158,16 +152,13 @@ const baseURL = import.meta.env.VITE_BASE_URL
         console.error("Status code:", error.response.status);
         console.error("Headers:", error.response.headers);
         setError(
-          
             "Server error occurred. Please try again."
         );
         toast.error(error.response.data?.detail)
       } else if (error.request) {
-        // console.error("Request error:", error.request);
         setError("No response from server. Please check your connection.");
       } else {
-        // console.error("Error", error.message);
-        setError("Registration failed. Please try again.");
+    setError("Registration failed. Please try again.");
       }
     }
   }
@@ -175,7 +166,7 @@ const baseURL = import.meta.env.VITE_BASE_URL
   const handleResendOTP =async ()=>{
     try {
       const response = await axios.post(
-        `${baseURL}auth/resend-mfa-code`,
+        `${baseURL}api/auth/resend-mfa-code`,
         {
           email:email
         }
@@ -196,10 +187,8 @@ const baseURL = import.meta.env.VITE_BASE_URL
         );
         toast.error(error.response.data?.detail)
       } else if (error.request) {
-        // console.error("Request error:", error.request);
         setError("No response from server. Please check your connection.");
       } else {
-        // console.error("Error", error.message);
         setError("Registration failed. Please try again.");
       }
     }
