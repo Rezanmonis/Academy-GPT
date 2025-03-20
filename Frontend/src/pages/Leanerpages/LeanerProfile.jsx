@@ -8,10 +8,12 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserData } from "../../features/userSlice";
 import person from "../../assets/Image/person.png";
+import { useTranslation } from "react-i18next";
 
 const LeanerProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Get user data from Redux store
   const { user, loading, error } = useSelector((state) => state.user);
@@ -62,15 +64,14 @@ const LeanerProfile = () => {
                     <button
                       onClick={handleProfileAddClick}
                       className="p-1 px-2 text-white rounded-md bg-primary text-xs md:text-sm xl:text-lg font-bold">
-                      Edit Profile
+                      {t("Edit Profile")}
                     </button>
                   </div>
                 </div>
                 <div className="flex">
                   <LiaCertificateSolid className="size-6 xl:size-7 text-[#C1C1C1]" />
                   <p className="text-sm xl:text-base font-medium">
-                    Your first lessons is backed by our <br />
-                    <span className="text-primary">Good Fit Guarantee</span>
+                 {t(" Your first lesson s backed by our good fit guarantee")}
                   </p>
                 </div>
                 <div className="hidden md:flex">
@@ -79,13 +80,13 @@ const LeanerProfile = () => {
                       <div className="flex space-x-2">
                         <MdEmail className="my-auto size-5 xl:size-6 text-[#C1C1C1]" />
                         <p className="font-medium text-[13px] xl:text-base">
-                          {user.email || "Not Provided"}
+                          {user.email || t("Not Provided")}
                         </p>
                       </div>
                       <div className="flex space-x-2">
                         <RiPhoneFill className="my-auto size-5 xl:size-6 text-[#C1C1C1]" />
                         <p className="font-medium text-[13px] xl:text-base">
-                          {user.phone || "Not Provided"}
+                          {user.phone || t("Not Provided")}
                         </p>
                       </div>
                     </div>
@@ -138,7 +139,7 @@ const LeanerProfile = () => {
           {/* Right Information Section */}
           <div className="border-2 p-3 drop-shadow-md rounded-lg md:w-3/6">
             <div>
-              <h2 className="text-base md:text-lg xl:text-xl font-semibold">Basic Information</h2>
+              <h2 className="text-base md:text-lg xl:text-xl font-semibold">{t("Basic Information")}</h2>
               <p className="text-sm lg:text-base xl:text-lg text-black/80 font-normal">
                 {user.basic_information || "No basic information provided."}
               </p>
@@ -150,13 +151,13 @@ const LeanerProfile = () => {
               </p>
             </div>
             <div>
-              <h2 className="text-base md:text-lg xl:text-xl font-semibold">Education</h2>
+              <h2 className="text-base md:text-lg xl:text-xl font-semibold">{t("Education")}</h2>
               <p className="text-sm lg:text-base xl:text-lg text-black/80 font-normal">
                 {user.education || "No education details provided."}
               </p>
             </div>
             <div>
-              <h2 className="text-base md:text-lg xl:text-xl font-semibold">Goal</h2>
+              <h2 className="text-base md:text-lg xl:text-xl font-semibold">{t("Goal")}</h2>
               <p className="text-sm lg:text-base xl:text-lg text-black/80 font-normal">
                 {user.goal || "No goal set."}
               </p>

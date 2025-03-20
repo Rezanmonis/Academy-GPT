@@ -7,6 +7,7 @@ import { FaRegHeart } from "react-icons/fa6";
 import flag from "../assets/Image/UK Flag.png";
 import { IoLocationOutline } from "react-icons/io5";
 import whatapp from "../assets/Image/whatsapp.png";
+import { useTranslation } from "react-i18next";
 
 const TutorDetails = () => {
   const { id } = useParams(); // Fetch ID from route params
@@ -16,6 +17,7 @@ const TutorDetails = () => {
   const [tutor, setTutor] = useState(tutorFromState || null); // Initialize with passed state
   const [loading, setLoading] = useState(!tutor); // Show loading if tutor is null
   const [error, setError] = useState(null);
+  const { t } = useTranslation();
 
   // Fetch tutor data if not passed via state
   useEffect(() => {
@@ -117,14 +119,14 @@ const TutorDetails = () => {
                   </div>
                   <p className="flex text-xs font-medium md:text-sm xl:text-lg text-black/70 xl:pr-10 whitespace-nowrap md:whitespace-normal">
                     <LuClock3 className="my-auto md:my-0 mr-1 md:size-5 xl:size-6" />
-                    {tutor.hours || "N/A"} hours teaching students
+                    {tutor.hours || "N/A"} {t("hours teaching students")}
                   </p>
                   <p className="flex text-xs font-medium md:text-sm xl:text-lg text-black/70 xl:pr-10 whitespace-nowrap md:whitespace-normal">
                     <IoLocationOutline className="my-auto md:my-0 mr-1 md:size-5 xl:size-6" />{" "}
-                    {tutor.address || "Location not provided"}
+                    {tutor.address || t("Location not provided")}
                   </p>
                   <p className="text-xs md:text-sm xl:text-lg text-black/70">
-                    Languages:{" "}
+                    {t("Languages")}:{" "}
                     {Array.isArray(tutor.languages)
                       ? tutor.languages.join(", ")
                       : tutor.languages || "No languages specified"}
@@ -136,11 +138,11 @@ const TutorDetails = () => {
             </div>
             <div>
               <p className="text-xs xl:text-base font-normal w-60 md:w-full">
-                Your First Lesson is Backed by our Good Fit Guarantee
+               {t("Your First Lesson is Backed by our Good Fit Guarantee")}
               </p>
               <div className="md:flex py-2 md:justify-between">
                 <h2 className="text-lg md:text-xl xl:text-2xl md:my-auto font-bold">
-                  Hourly: ${tutor.hourly_rate || "N/A"}
+                  {t("Hourly")}: ${tutor.hourly_rate || "N/A"}
                 </h2>
                 <div className="my-auto hidden md:flex">
                   <img
@@ -160,18 +162,18 @@ const TutorDetails = () => {
                 <div className="flex justify-between">
                   <div className="my-auto">
                     <h2 className="text-[19px] md:text-xl xl:text-4xl font-semibold">
-                      Excellent Tutor!
+                      {t("Excellent Tutor")}!
                     </h2>
                   </div>
                   <p className="text-lg md:text-xl xl:text-3xl font-medium">
                     <button className="p-1 px-2 text-xs md:text-base xl:text-xl font-semibold rounded-md bg-primary text-white">
-                      Book Lesson
+                      {t("Book Lesson")}
                     </button>
                   </p>
                 </div>
                 <div>
                   <p className="text-[9.73px] md:text-[13px] xl:text-lg text-black/60 font-normal">
-                    {tutor.description || "No description provided."}
+                    {tutor.description || t("No description provided.")}
                   </p>
                 </div>
               </div>
@@ -199,13 +201,13 @@ const TutorDetails = () => {
                 <div className="flex justify-between md:pr-14">
                   <div className="my-auto">
                     <h2 className="text-[19px] md:text-xl xl:text-4xl font-semibold">
-                      Education
+                      {t("Education")}
                     </h2>
                   </div>
                 </div>
                 <div>
                   <p className="text-[9.73px] md:text-[13px] xl:text-lg text-black/60 font-normal">
-                    {tutor.education || "No education details available."}
+                    {tutor.education || t("No education details available.")}
                   </p>
                 </div>
               </div>
@@ -213,13 +215,13 @@ const TutorDetails = () => {
                 <div className="flex justify-between md:pr-14">
                   <div className="my-auto">
                     <h2 className="text-[19px] md:text-xl xl:text-4xl font-semibold">
-                      Policies
+                      {t("Policies")}
                     </h2>
                   </div>
                 </div>
                 <div>
                   <p className="text-[9.73px] md:text-[13px] xl:text-lg text-black/60 font-normal">
-                    {tutor.policy || "No policies provided."}
+                    {tutor.policy || t("No policies provided.")}
                   </p>
                 </div>
               </div>
@@ -227,13 +229,13 @@ const TutorDetails = () => {
                 <div className="flex justify-between md:pr-14">
                   <div className="my-auto">
                     <h2 className="text-[19px] md:text-xl xl:text-4xl font-semibold">
-                      Schedule
+                      {t("Schedule")}
                     </h2>
                   </div>
                 </div>
                 <div>
                   <p className="text-[9.73px] md:text-[13px] xl:text-lg text-black/60 font-normal">
-                    {tutor.schedule || "No schedule available."}
+                    {tutor.schedule || t("No schedule available.")}
                   </p>
                 </div>
               </div>
