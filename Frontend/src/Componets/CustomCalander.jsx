@@ -230,7 +230,7 @@ function MeetingScheduler({ onCancel, viewSlots }) {
         {/* Previous button */}
         <button
           onClick={() => navigateDates("prev")}
-          className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-200 mr-4"
+          className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 mr-4"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -238,13 +238,13 @@ function MeetingScheduler({ onCancel, viewSlots }) {
         {dataLoading ? (
           <DottedLoader color="orange" size={40} />
         ) : (
-          <div className="flex-1 grid grid-cols-3 gap-4">
+          <div className="flex-1 grid grid-cols-3 gap-2">
             {dates.map((date, dateIndex) => (
               <div key={dateIndex} className="flex flex-col items-center">
-                <div className="text-lg font-medium text-gray-700 mb-1">
+                <div className="text-[12px] font-medium text-gray-700 mb-1">
                   {formatDate(date)}
                 </div>
-                <div className="text-base text-gray-500 mb-4">
+                <div className="text-base text-[12px] text-gray-500 mb-4">
                   {formatDayOfWeek(date)}
                 </div>
 
@@ -282,7 +282,7 @@ function MeetingScheduler({ onCancel, viewSlots }) {
                     return (
                       <button
                         key={slotId}
-                        className={`w-full py-3 border border-gray-300 rounded-md text-gray-700 transition-colors
+                        className={`w-full py-3 border border-gray-300 rounded-md text-gray-700 transition-colors text-[12px]
             ${
               isSlotSelected || isSlotScheduled
                 ? "bg-orange-500 text-white border-orange-500 border-2"
@@ -305,7 +305,7 @@ function MeetingScheduler({ onCancel, viewSlots }) {
         {/* Next button */}
         <button
           onClick={() => navigateDates("next")}
-          className="w-12 h-12 flex items-center justify-center rounded-full bg-orange-500 text-white ml-4"
+          className="w-8 h-8 flex items-center justify-center rounded-full bg-orange-500 text-white ml-4"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
