@@ -255,11 +255,11 @@ const TutorProfile = () => {
           </div>
 
           <div className="md:hidden  ">
-            <div
+            {/* <div
               className=" w-full -mt-5 h-full scale-125  "
               onClick={() => setIsCalendarModalOpen(true)}>
               <CustomCalendar />
-            </div>
+            </div> */}
           </div>
 
           <div className="border-2 p-3 drop-shadow-md rounded-lg md:w-2/6">
@@ -358,12 +358,12 @@ const TutorProfile = () => {
           </div>
         </div>
       </div>
-      {isCalendarModalOpen && (
+      {/* {isCalendarModalOpen && (
         <CustomCalendar
           isFullScreen={true}
           onClose={() => setIsCalendarModalOpen(false)}
         />
-      )}
+      )} */}
     </>
   );
 };
