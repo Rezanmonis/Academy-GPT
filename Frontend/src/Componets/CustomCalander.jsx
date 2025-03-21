@@ -262,12 +262,13 @@ function MeetingScheduler({
         }
       );
       const teacherData = response.data;
-      if (teacherData?.statusCode === 200) {
+      if (teacherData?.status) {
         setScheduledSlots(teacherData?.data);
         setDataLoading(false);
       }
     } catch (error) {
       console.error("error ===>", error);
+      setDataLoading(false);
     }
   };
 
