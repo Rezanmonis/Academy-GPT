@@ -188,7 +188,7 @@ const TutorProfile = () => {
                   </div>
                 </div>
               </div>
-              <div className="absolute left-1/2 -translate-x-16 md:-top-12 w-[340px] lg:w-[350px] xl:w-96 xl:-top-16 ">
+              <div className="absolute left-1/2 -translate-x-16 md:-top-12 w-[340px] lg:w-[350px] xl:w-96 xl:top-0 ">
                 <div className="hidden md:flex">
                   <div
                     className="cursor-pointer transform scale-75 md:scale-50 lg:scale-75 hover:scale-85 transition-transform"
