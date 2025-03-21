@@ -13,84 +13,12 @@ const baseURL = import.meta.env.VITE_BASE_URL;
 
 export default function MeetingSchedulerModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [scheduledSlots, setScheduledSlots] = useState([]);
-  const [notification, setNotification] = useState(null);
-  const { teacher, loading, error } = useSelector((state) => state.teacher);
   const [viewSlots, setViewSlots] = useState(false);
-
-  // Function to show a notification
-  const showNotification = (message, type = "success") => {
-    setNotification({ message, type });
-    setTimeout(() => setNotification(null), 3000);
-  };
-
-  // Function to handle scheduling a slot
-  const handleScheduleSlot = (date, time) => {
-    const newSlot = { date, time };
-    setScheduledSlots([...scheduledSlots, newSlot]);
-    setIsModalOpen(false);
-    showNotification(`Your meeting is scheduled for ${date} at ${time}`);
-  };
-
-  const getSlots = async () => {
-    try {
-      const authToken = sessionStorage.getItem("token"); // Retrieve token (example)
-
-      const response = await axios.get(
-        `${baseURL}teachers/availabilities?teacher_id=${teacher?.data?.teacher_id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`, // Attach token
-            "Content-Type": "application/json", // Ensure correct content type
-          },
-        }
-      );
-      const teacherData = response.data;
-      if (teacherData?.statusCode === 200) {
-        setScheduledSlots(teacherData?.data);
-      }
-    } catch (error) {
-      console.error("error ===>", error);
-    }
-  };
-
-  useEffect(() => {
-    getSlots();
-  }, []);
-
-  function formatTimestamp(isoString) {
-    const date = new Date(isoString);
-
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-
-    let hours = date.getHours();
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const ampm = hours >= 12 ? "PM" : "AM";
-
-    hours = hours % 12 || 12; // Convert to 12-hour format
-    const formattedTime = `${hours}:${minutes} ${ampm}`;
-
-    return `${day}-${month}-${year} \n${formattedTime}`;
-  }
 
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4 mt-2">Your Schedule</h2>
 
-      {/* Notification */}
-      {notification && (
-        <div
-          className={`p-3 mb-4 rounded-md ${
-            notification.type === "success"
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }`}
-        >
-          {notification.message}
-        </div>
-      )}
       <div className="">
         <button
           className="bg-orange-500 hover:bg-orange-600 text-white w-[200px] rounded flex justify-center h-[40px] items-center mb-4"
@@ -120,10 +48,7 @@ export default function MeetingSchedulerModal() {
         title="Schedule a Meeting"
       >
         <MeetingScheduler
-          onSchedule={handleScheduleSlot}
           onCancel={() => setIsModalOpen(false)}
-          showNotification={showNotification}
-          // getSlots={getSlots}
           viewSlots={viewSlots}
         />
       </Modal>
@@ -131,13 +56,7 @@ export default function MeetingSchedulerModal() {
   );
 }
 
-function MeetingScheduler({
-  onSchedule,
-  onCancel,
-  showNotification,
-  // getSlots,
-  viewSlots,
-}) {
+function MeetingScheduler({ onCancel, viewSlots }) {
   const [viewMode, setViewMode] = useState("day");
   const [selectedDate, setSelectedDate] = useState(new Date(2023, 8, 26)); // September 26, 2023
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
@@ -262,12 +181,13 @@ function MeetingScheduler({
         }
       );
       const teacherData = response.data;
-      if (teacherData?.statusCode === 200) {
+      if (teacherData?.status) {
         setScheduledSlots(teacherData?.data);
         setDataLoading(false);
       }
     } catch (error) {
       console.error("error ===>", error);
+      setDataLoading(false);
     }
   };
 
