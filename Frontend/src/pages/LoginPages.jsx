@@ -290,7 +290,7 @@ const LoginPages = () => {
         setShowNumberCode(true);
         setUserData(response.data)
       }
-      if (response.data?.statusCode === 200 && response.data?.data?.access) {
+      if (response.data?.status) { 
         const { access, user } = response.data.data;
         setUserData
         if (rememberMe) {
@@ -321,6 +321,8 @@ const LoginPages = () => {
 
     } catch (err) {
       console.error(err);
+      toast.error(err.response.data?.message);
+
       setError(err.response?.data?.detail || "Login failed.");
     } finally {
       setIsLoading(false);

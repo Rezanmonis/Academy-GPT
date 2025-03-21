@@ -9,7 +9,8 @@ import "react-phone-input-2/lib/style.css";
 import { IoIosArrowForward } from "react-icons/io";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import DottedLoader from "../Componets/Loader";
 
 // Languages list
 const initialLanguages = [
@@ -37,12 +38,13 @@ const ApplyNowPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState(null);
-  const [verifiactionToken,setVerificationToken] = useState()
-  const [userData,setUserData] = useState()
+  const [verifiactionToken, setVerificationToken] = useState();
+  const [userData, setUserData] = useState();
+  const [apiLoading, setApiLoading] = useState(false);
 
   const navigate = useNavigate();
   const { t } = useTranslation();
-const baseURL = import.meta.env.VITE_BASE_URL
+  const baseURL = import.meta.env.VITE_BASE_URL;
 
   const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
   const toggleConfirmPasswordVisibility = () =>
@@ -72,6 +74,7 @@ const baseURL = import.meta.env.VITE_BASE_URL
       .join(", ");
 
     try {
+      setApiLoading(true);
       const response = await axios.post(
         "https://academy-gpt-backend.onrender.com/api/auth/registration",
         {
@@ -86,32 +89,33 @@ const baseURL = import.meta.env.VITE_BASE_URL
           languages: formattedLanguages,
         }
       );
-      if (response.status === 201) {
+      console.log("response", response);
+      if (response.data.status) {
         setShowNumberCode(true);
-        setUserData(response.data.data)
+        setUserData(response.data.data);
+        setApiLoading(false);
       }
     } catch (error) {
-      if (error.response.status==400) {
-
+      if (error.response.status == 400) {
         console.error("Response data:", error.response.data); // Backend response
         console.error("Status code:", error.response.status);
         console.error("Headers:", error.response.headers);
-      
-        toast.error(error.response.data?.email[0])
 
+        toast.error(error.response.data.message);
       } else if (error.request) {
         setError("No response from server. Please check your connection.");
       } else {
         setError("Registration failed. Please try again.");
       }
+      setApiLoading(false);
     }
-
   };
 
   const customOption = (props) => (
     <div
       {...props.innerProps}
-      className="flex items-center my-auto p-2 cursor-pointer ">
+      className="flex items-center my-auto p-2 cursor-pointer "
+    >
       <img
         src={props.data.flag}
         alt="flag"
@@ -129,71 +133,58 @@ const baseURL = import.meta.env.VITE_BASE_URL
     setSelectedLanguages([...selectedLanguages, newLanguage]);
   };
 
-  const handleVerifyOTP =async ()=>{
+  const handleVerifyOTP = async () => {
     try {
-      const response = await axios.post(
-        `${baseURL}api/auth/verify-mfa`,
-        {
-          user:userData.user,
-          token:verifiactionToken
-        }
-      );
+      const response = await axios.post(`${baseURL}api/auth/verify-mfa`, {
+        user: userData.user,
+        token: verifiactionToken,
+      });
 
-      if (response.data.statusCode === 200) {
+      if (response.data.status) {
         sessionStorage.setItem("token", response.data.data.access);
 
         navigate("/tutornavbar");
-
       }
     } catch (error) {
-      if ( error.response.status===400) {
-
+      if (error.response.status === 400) {
         console.error("Response data:", error.response.data); // Backend response
         console.error("Status code:", error.response.status);
         console.error("Headers:", error.response.headers);
-        setError(
-            "Server error occurred. Please try again."
-        );
-        toast.error(error.response.data?.detail)
-      } else if (error.request) {
-        setError("No response from server. Please check your connection.");
-      } else {
-    setError("Registration failed. Please try again.");
-      }
-    }
-  }
-
-  const handleResendOTP =async ()=>{
-    try {
-      const response = await axios.post(
-        `${baseURL}api/auth/resend-mfa-code`,
-        {
-          email:email
-        }
-      );
-
-      if (response.status === 201) {
-        setShowNumberCode(true);
-      }
-    } catch (error) {
-      if ( error.response.status===400) {
-
-        console.error("Response data:", error.response.data); // Backend response
-        console.error("Status code:", error.response.status);
-        console.error("Headers:", error.response.headers);
-        setError(
-          
-            "Server error occurred. Please try again."
-        );
-        toast.error(error.response.data?.detail)
+        setError("Server error occurred. Please try again.");
+        toast.error(error.response.data?.message);
       } else if (error.request) {
         setError("No response from server. Please check your connection.");
       } else {
         setError("Registration failed. Please try again.");
       }
     }
-  }
+  };
 
+  const handleResendOTP = async () => {
+    try {
+      const response = await axios.post(`${baseURL}api/auth/resend-mfa-code`, {
+        email: email,
+      });
+
+      if (response.data.status) {
+        setShowNumberCode(true);
+        toast.success(response.data?.message);
+      }
+    } catch (error) {
+      if (error.response.status === 400) {
+        console.error("Response data:", error.response.data); // Backend response
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+        setError("Server error occurred. Please try again.");
+        toast.error(error.response.data?.message);
+        
+      } else if (error.request) {
+        setError("No response from server. Please check your connection.");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    }
+  };
 
   return (
     <>
@@ -201,7 +192,7 @@ const baseURL = import.meta.env.VITE_BASE_URL
       <div className="lg:flex mt-8 px-8 xl:py-5 relative font-urbanist">
         <div className="lg:w-1/2 md:px-16 lg:px-6 md:my-auto">
           <h2 className="text-center text-4xl xl:text-3xl font-bold">
-          {t("Apply Now")}
+            {t("Apply Now")}
           </h2>
           <p className="text-center text-black/70 text-lg font-medium xl:text-2xl">
             {t("Ap cap")}
@@ -310,7 +301,6 @@ const baseURL = import.meta.env.VITE_BASE_URL
                 height: "45px",
                 border: "1px solid #000",
                 borderRadius: ".3rem",
-                
               }}
             />
 
@@ -326,9 +316,7 @@ const baseURL = import.meta.env.VITE_BASE_URL
                   Option: customOption,
                 }}
               />
-              <p className="text-sm font-medium py-1">
-               {t("Languages cap")}
-              </p>
+              <p className="text-sm font-medium py-1">{t("Languages cap")}</p>
             </div>
 
             {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -337,8 +325,10 @@ const baseURL = import.meta.env.VITE_BASE_URL
               <button
                 type="submit"
                 onClick={handleRegister}
-                className="p-2 w-full lg:w-72 flex justify-center text-2xl font-bold rounded-md text-white bg-primary">
-                {t("Next")} <IoIosArrowForward className="my-auto ml-3" />
+                className="p-2 w-full lg:w-72 flex justify-center text-2xl font-bold rounded-md text-white bg-primary"
+              >
+                {apiLoading ? <DottedLoader /> : t("Next")}{" "}
+                <IoIosArrowForward className="my-auto ml-3" />
               </button>
             </div>
           </form>
@@ -376,19 +366,21 @@ const baseURL = import.meta.env.VITE_BASE_URL
               className="w-full p-2 pl-5 xl:p-3 border border-black rounded-lg focus:outline-primary"
               name="code"
               id="code"
-              placeholder= {t("Enter Verification Code")}
+              placeholder={t("Enter Verification Code")}
               value={verifiactionToken}
-              onChange={(e)=>setVerificationToken(e.target.value)}
+              onChange={(e) => setVerificationToken(e.target.value)}
             />
             <div className="space-y-2">
-              <button className="p-2 w-full flex justify-center text-lg xl:text-xl font-medium"
-              onClick={handleResendOTP}
+              <button
+                className="p-2 w-full flex justify-center text-lg xl:text-xl font-medium"
+                onClick={handleResendOTP}
               >
                 {t("Resend Code")}
               </button>
               <button
                 onClick={handleVerifyOTP}
-                className="p-2 w-full flex justify-center text-xl xl:text-2xl font-bold rounded-md text-white bg-primary">
+                className="p-2 w-full flex justify-center text-xl xl:text-2xl font-bold rounded-md text-white bg-primary"
+              >
                 {t("Verify")}
               </button>
             </div>
