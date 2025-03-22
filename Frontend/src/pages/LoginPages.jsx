@@ -229,7 +229,7 @@ import axios from "axios";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import LoginNavbar from "../Componets/loginNavbar";
 import { updateUser } from "../features/userSlice";
-import { fetchTeacherData } from "../features/teacherSlice"; // Correct import
+import { fetchTeacherData, updateTeacher } from "../features/teacherSlice"; // Correct import
 import facebook from "../assets/Image/facebook.png";
 import google from "../assets/Image/google.png";
 import apple from "../assets/Image/apple.png";
@@ -308,7 +308,7 @@ const LoginPages = () => {
           );
           navigate("/leanernavbar");
         } else if (user.is_teacher) {
-          dispatch(fetchTeacherData()); // Corrected to fetch teacher profile
+          // dispatch(updateTeacher()); // Corrected to fetch teacher profile
           navigate("/tutornavbar");
         } else {
           setError("Unknown user role.");
