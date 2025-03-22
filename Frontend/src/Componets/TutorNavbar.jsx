@@ -17,7 +17,7 @@ const TutorNavbar = () => {
   const location = useLocation();
   const { t } = useTranslation();
 
-  
+  console.log("called===>")
 
   const [collapsed, setCollapsed] = useState(true);
   const [activeComponent, setActiveComponent] = useState("");
