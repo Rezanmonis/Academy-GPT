@@ -1,5 +1,4 @@
 import { useState,useEffect } from 'react';
-import profileimg from "../../assets/Image/tutorprofile.png";
 import { LiaCertificateSolid } from "react-icons/lia";
 import flag from "../../assets/Image/UK Flag.png";
 import { MdEmail } from "react-icons/md";

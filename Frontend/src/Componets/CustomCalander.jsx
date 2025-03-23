@@ -1,13 +1,12 @@
-"use client";
-
 import { useState, useEffect } from "react";
-// import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import Modal from "./CustomModel";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import DottedLoader from "./Loader";
+import { Trash } from "lucide-react";
+import apiService from "../services/apiServices";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -67,6 +66,7 @@ function MeetingScheduler({ onCancel, viewSlots }) {
   const { teacher, loading, error } = useSelector((state) => state.teacher);
   const [dataLoading, setDataLoading] = useState(true);
   const [apiLoading, setApiLoading] = useState(false);
+  const [slotsToDelete, setSlotsToDelete] = useState([]); // Tracks scheduled slots selected for deletion
 
   // Generate dates for the current view (3 consecutive days)
   const dates = Array.from({ length: 3 }, (_, i) => {
@@ -129,7 +129,46 @@ function MeetingScheduler({ onCancel, viewSlots }) {
         { group_size: "4+", price: "150.00" },
       ],
     };
-    setSelectedSlots((prevSlots) => [...prevSlots, formattedSlot]);
+
+    const matchingScheduledSlot = scheduledSlots.find(
+      (slot) => new Date(slot.start_time).getTime() === startDateTime.getTime()
+    );
+
+    if (matchingScheduledSlot && viewSlots) {
+      // If already in `slotsToDelete`, remove it (toggle off)
+      setSlotsToDelete(
+        (prev) =>
+          prev.some((s) => s.id === matchingScheduledSlot.id)
+            ? prev.filter((s) => s.id !== matchingScheduledSlot.id)
+            : [...prev, matchingScheduledSlot] // Add if not in array
+      );
+      return; // Exit function to prevent adding to selectedSlots
+    }
+
+    const isSlotScheduled = scheduledSlots.some(
+      (slot) => new Date(slot.start_time).getTime() === startDateTime.getTime()
+    );
+
+    if (isSlotScheduled) {
+      return; // 🚫 Stop function execution if slot is already scheduled
+    }
+
+    setSelectedSlots((prevSlots) => {
+      // Check if the slot already exists
+      const slotExists = prevSlots.some(
+        (slot) => slot.start_time === formattedSlot.start_time
+      );
+
+      if (slotExists) {
+        // Remove the slot if it was already selected
+        return prevSlots.filter(
+          (slot) => slot.start_time !== formattedSlot.start_time
+        );
+      } else {
+        // Add new slot
+        return [...prevSlots, formattedSlot];
+      }
+    });
 
     setSelectedDateValue(
       `${formatDate(selectedDateObj)} (${formatDayOfWeek(selectedDateObj)})`
@@ -152,9 +191,11 @@ function MeetingScheduler({ onCancel, viewSlots }) {
         }
       );
 
-      if (response?.data?.statusCode) {
+      if (response?.data.status) {
+        toast.success(response?.data?.message);
         onCancel();
         getSlots();
+        setScheduledSlots([]);
       }
       setApiLoading(false);
     } catch (error) {
@@ -190,11 +231,50 @@ function MeetingScheduler({ onCancel, viewSlots }) {
       setDataLoading(false);
     }
   };
+  const handleDeleteSelectedSlot = async (id, updateFields) => {
+    const slotIdsToDelete = slotsToDelete.map((slot) => slot.id); // Extract IDs
+
+    const response = await apiService({
+      method: "DELETE",
+      endpoint: `teachers/availabilities/${id}`,
+      data: updateFields,
+    });
+
+    if (!response.error) {
+      console.log("Patch Successful:", response);
+    }
+  };
+  const handleDeleteAllSlot = async (type) => {
+    let slotIdsToDelete = [];
+    if (type === "all") {
+      slotIdsToDelete = scheduledSlots.map((slot) => slot.id); // Extract IDs
+    } else {
+      slotIdsToDelete = slotsToDelete.map((slot) => slot.id); // Extract IDs
+    }
+    const response = await apiService({
+      method: "DELETE",
+      endpoint: `teachers/availabilities`,
+      data: { ids: slotIdsToDelete },
+    });
+
+    if (response.status) {
+      console.log("Patch Successful:", response);
+      toast.success(response.message);
+      setSlotsToDelete([]);
+      getSlots();
+    } else {
+      toast.error(response.message);
+    }
+    console.log("response ===>", response);
+  };
 
   useEffect(() => {
     getSlots();
   }, []);
 
+  console.log("selectedSlots ===>", selectedSlots);
+  console.log("scheduledSlots ===>", scheduledSlots);
+  console.log("delte ===>", slotsToDelete);
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-3xl font-bold text-center mb-8">
@@ -213,16 +293,6 @@ function MeetingScheduler({ onCancel, viewSlots }) {
         >
           Day
         </button>
-        {/* <button
-          className={`w-32 rounded-md text-lg font-medium ${
-            viewMode === "month"
-              ? "bg-orange-500 hover:bg-orange-600 text-white"
-              : "bg-white text-black border border-orange-500 hover:bg-orange-50"
-          }`}
-          onClick={() => setViewMode("month")}
-        >
-          Month
-        </button> */}
       </div>
 
       {/* Calendar view */}
@@ -277,6 +347,11 @@ function MeetingScheduler({ onCancel, viewSlots }) {
                         new Date(slot.start_time).getTime() ===
                         timeString.getTime()
                     );
+                    const isSlotDeleted = slotsToDelete.some(
+                      (slot) =>
+                        new Date(slot.start_time).getTime() ===
+                        timeString.getTime()
+                    );
 
                     // Determine the button style based on whether it's selected or scheduled
                     return (
@@ -284,7 +359,9 @@ function MeetingScheduler({ onCancel, viewSlots }) {
                         key={slotId}
                         className={`w-full py-3 border border-gray-300 rounded-md text-gray-700 transition-colors text-[12px]
             ${
-              isSlotSelected || isSlotScheduled
+              isSlotDeleted
+                ? "bg-red-500 text-white border-orange-500 border-2"
+                : isSlotSelected || isSlotScheduled
                 ? "bg-orange-500 text-white border-orange-500 border-2"
                 : "hover:border-orange-500 hover:bg-orange-100"
             }`}
@@ -311,7 +388,7 @@ function MeetingScheduler({ onCancel, viewSlots }) {
         </button>
       </div>
 
-      {!viewSlots && (
+      {!viewSlots ? (
         <div className="flex gap-4 w-full justify-center">
           <button
             variant="outline"
@@ -325,6 +402,30 @@ function MeetingScheduler({ onCancel, viewSlots }) {
             onClick={handleDone}
           >
             {apiLoading ? <DottedLoader /> : "Done"}
+          </button>
+        </div>
+      ) : (
+        <div className="flex gap-4 w-full justify-center">
+          <button
+            variant="outline"
+            className="w-40 text-lg font-medium h-[40px] flex items-center justify-center "
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+          <button
+            className="w-40 py-6 text-lg font-medium bg-orange-500 hover:bg-orange-600 text-white rounded-md h-[40px] flex items-center justify-center"
+            onClick={() => handleDeleteAllSlot("multiple")}
+          >
+            <Trash className="mr-2" />
+            {apiLoading ? <DottedLoader /> : "Slot"}
+          </button>
+          <button
+            className="w-40 py-6 text-lg font-medium bg-orange-500 hover:bg-orange-600 text-white rounded-md h-[40px] flex items-center justify-center"
+            onClick={() => handleDeleteAllSlot("all")}
+          >
+            <Trash className="mr-2" />
+            {apiLoading ? <DottedLoader /> : "All Slots"}
           </button>
         </div>
       )}
