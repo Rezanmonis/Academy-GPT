@@ -399,7 +399,7 @@ console.log("calllllllll---.",response)
   const handleResendOTP =async ()=>{
     try {
       const response = await axios.post(
-        `${baseURL}auth/resend-mfa-code`,
+        `https://academy-gpt-backend.onrender.com/auth/resend-mfa-code`,
         {
           email:email
         }

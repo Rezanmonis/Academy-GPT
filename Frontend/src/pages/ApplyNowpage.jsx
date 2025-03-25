@@ -132,7 +132,7 @@ const baseURL = import.meta.env.VITE_BASE_URL
   const handleVerifyOTP =async ()=>{
     try {
       const response = await axios.post(
-        `${baseURL}api/auth/verify-mfa`,
+        `https://academy-gpt-backend.onrender.com/api/auth/verify-mfa`,
         {
           user:userData.user,
           token:verifiactionToken
