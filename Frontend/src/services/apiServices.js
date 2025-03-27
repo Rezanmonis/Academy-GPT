@@ -56,7 +56,7 @@ const apiService = async ({
       }
     }
 
-    toast.error(errorMessage);
+    toast.error(error?.response?.data?.message);
     return { error: errorMessage };
   }
 };
