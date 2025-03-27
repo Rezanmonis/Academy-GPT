@@ -57,7 +57,7 @@ export default function MeetingSchedulerModal() {
 
 function MeetingScheduler({ onCancel, viewSlots }) {
   const [viewMode, setViewMode] = useState("day");
-  const [selectedDate, setSelectedDate] = useState(new Date(2023, 8, 26)); // September 26, 2023
+  const [selectedDate, setSelectedDate] = useState(new Date(2025, 2, 30)); // September 26, 2023
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [selectedTimeValue, setSelectedTimeValue] = useState(null);
   const [selectedDateValue, setSelectedDateValue] = useState(null);
@@ -231,19 +231,7 @@ function MeetingScheduler({ onCancel, viewSlots }) {
       setDataLoading(false);
     }
   };
-  const handleDeleteSelectedSlot = async (id, updateFields) => {
-    const slotIdsToDelete = slotsToDelete.map((slot) => slot.id); // Extract IDs
 
-    const response = await apiService({
-      method: "DELETE",
-      endpoint: `teachers/availabilities/${id}`,
-      data: updateFields,
-    });
-
-    if (!response.error) {
-      console.log("Patch Successful:", response);
-    }
-  };
   const handleDeleteAllSlot = async (type) => {
     let slotIdsToDelete = [];
     if (type === "all") {
