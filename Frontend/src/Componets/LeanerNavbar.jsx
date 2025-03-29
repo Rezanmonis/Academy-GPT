@@ -220,6 +220,7 @@
 
 import { useState, useEffect } from "react";
 import { MenuOutlined } from "@ant-design/icons";
+// import logo from "../assets/Image/Logo.png";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserData, logout } from "../features/userSlice";
 import { CgClose } from "react-icons/cg";
@@ -356,7 +357,7 @@ const LeanerNavbar = () => {
           />
           <IoSearch className="my-auto mt-1" size={25} />
           <button onClick={toggleDrawer}>
-            <MenuOutlined className="text-white text-2xl" />
+            <MenuOutlined className="text-white hidden text-2xl" />
           </button>
         </div>
       </div>

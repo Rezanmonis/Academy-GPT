@@ -40,7 +40,7 @@ const MiniMeetingModal = ({ modalIsOpen, handleModal, size }) => {
           }}
           className="rounded-t-[15px]"
         >
-          <h3>Your Video is Abled</h3>
+          <h4>Video is Active</h4>
         </div>
         <div
           id="sessionMiniContainer"

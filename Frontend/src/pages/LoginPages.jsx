@@ -96,9 +96,8 @@
 
 // const handleSocialLogin = () => {
 //     if (isLoading) return;
-    
-//   };
 
+//   };
 
 //   return (
 //     <>
@@ -220,8 +219,6 @@
 
 // export default LoginPages;
 
-
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -235,8 +232,7 @@ import google from "../assets/Image/google.png";
 import apple from "../assets/Image/apple.png";
 import login from "../assets/Image/Login.png";
 import { useTranslation } from "react-i18next";
-import { toast } from 'react-toastify';
-
+import { toast } from "react-toastify";
 
 const LoginPages = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -249,9 +245,9 @@ const LoginPages = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const [showNumberCode, setShowNumberCode] = useState(false);
-  const [verifiactionToken,setVerificationToken] = useState()
-  const [userData,setUserData] = useState()
-  const baseURL = import.meta.env.VITE_BASE_URL
+  const [verifiactionToken, setVerificationToken] = useState();
+  const [userData, setUserData] = useState();
+  const baseURL = import.meta.env.VITE_BASE_URL;
 
   const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
 
@@ -285,14 +281,14 @@ const LoginPages = () => {
         { email: email.trim(), password },
         { headers: { "Content-Type": "application/json" } }
       );
-      console.log("ress login",response)
+
       if (response.status === 202) {
         setShowNumberCode(true);
-        setUserData(response.data)
+        setUserData(response.data);
       }
-      if (response.data?.status) { 
+      if (response.data?.status) {
         const { access, user } = response.data.data;
-        setUserData
+        setUserData;
         if (rememberMe) {
           localStorage.setItem("token", access);
         } else {
@@ -315,10 +311,9 @@ const LoginPages = () => {
         }
       } else {
         setError("Invalid response from server.");
-        toast.error(response.data.detail )}
-        // setShowNumberCode(true);
-
-
+        toast.error(response.data.detail);
+      }
+      // setShowNumberCode(true);
     } catch (err) {
       console.error(err);
       toast.error(err.response.data?.message);
@@ -340,20 +335,15 @@ const LoginPages = () => {
     // Add social login logic here if needed
   };
 
-  const handleVerifyOTP =async ()=>{
-    console.log("calling")
+  const handleVerifyOTP = async () => {
     try {
-      console.log("user+++++>",userData.user)
-      const response = await axios.post(
-        `${baseURL}auth/verify-mfa`,
-        {
-          user:userData.user,
-          token:verifiactionToken
-        }
-      );
-console.log("calllllllll---.",response)
+      const response = await axios.post(`${baseURL}auth/verify-mfa`, {
+        user: userData.user,
+        token: verifiactionToken,
+      });
+
       if (response.data.statusCode === 200) {
-        const responseData = response.data.data.user
+        const responseData = response.data.data.user;
         sessionStorage.setItem("token", response.data.data.access);
 
         if (responseData.is_student) {
@@ -370,24 +360,14 @@ console.log("calllllllll---.",response)
         } else {
           setError("Unknown user role.");
         }
-
-
-
       }
-      console.log("resonseee===>",response)
     } catch (error) {
-      console.log("errr===>",error)
-
-      if ( error?.response?.status===400) {
-
+      if (error?.response?.status === 400) {
         console.error("Response data:", error.response.data); // Backend response
         console.error("Status code:", error.response.status);
         console.error("Headers:", error.response.headers);
-        setError(
-          
-            "Server error occurred. Please try again."
-        );
-        toast.error(error.response.data?.detail)
+        setError("Server error occurred. Please try again.");
+        toast.error(error.response.data?.detail);
       } else if (error.request) {
         // console.error("Request error:", error.request);
         setError("No response from server. Please check your connection.");
@@ -396,50 +376,40 @@ console.log("calllllllll---.",response)
         setError("Registration failed. Please try again.");
       }
     }
-  }
+  };
 
-  const handleResendOTP =async ()=>{
+  const handleResendOTP = async () => {
     try {
-      const response = await axios.post(
-        `${baseURL}auth/resend-mfa-code`,
-        {
-          email:email
-        }
-      );
+      const response = await axios.post(`${baseURL}auth/resend-mfa-code`, {
+        email: email,
+      });
 
       if (response.status === 201) {
         setShowNumberCode(true);
       }
     } catch (error) {
-      if ( error.response.status===400) {
-
+      if (error.response.status === 400) {
         console.error("Response data:", error.response.data); // Backend response
         console.error("Status code:", error.response.status);
         console.error("Headers:", error.response.headers);
-        setError(
-          
-            "Server error occurred. Please try again."
-        );
-        toast.error(error.response.data?.detail)
+        setError("Server error occurred. Please try again.");
+        toast.error(error.response.data?.detail);
       } else if (error.request) {
-
         setError("No response from server. Please check your connection.");
       } else {
-
         setError("Registration failed. Please try again.");
       }
     }
-  }
-
-console.log("userDaa",userData)
-
+  };
 
   return (
     <>
       <LoginNavbar />
       <div className="lg:flex mt-8 px-8 h-screen lg:h-full relative font-urbanist">
         <div className="lg:w-1/2 md:px-16 lg:px-20 md:my-auto">
-          <h2 className="text-center text-4xl capitalize font-bold">{t("LOGIN")}</h2>
+          <h2 className="text-center text-4xl capitalize font-bold">
+            {t("LOGIN")}
+          </h2>
           <p className="text-center text-black/70 text-lg">
             {t("Login to access your account")}
           </p>
@@ -506,12 +476,14 @@ console.log("userDaa",userData)
           <p className="text-center text-sm py-2 font-medium">
             {t("Don't have an account")}?{" "}
             <Link to="/signuppages" className="text-primary">
-             {t("Sign up")}
+              {t("Sign up")}
             </Link>
           </p>
           <div className="flex py-5">
             <hr className="w-1/2 border-t-[0.5px] h-1 border-[#313131] my-auto" />
-            <p className="whitespace-nowrap text-sm px-2">{t("Or login with")}</p>
+            <p className="whitespace-nowrap text-sm px-2">
+              {t("Or login with")}
+            </p>
             <hr className="w-1/2 border-t-[0.5px] h-1 border-[#313131] my-auto" />
           </div>
           <div className="flex space-x-3">
@@ -520,7 +492,11 @@ console.log("userDaa",userData)
               onClick={() => handleSocialLogin("facebook")}
               disabled={isLoading}
             >
-              <img className="w-6 my-auto" src={facebook} alt="Facebook login" />
+              <img
+                className="w-6 my-auto"
+                src={facebook}
+                alt="Facebook login"
+              />
             </button>
             <button
               className="p-3 w-full justify-center flex border-[1px] rounded-md border-black"
@@ -540,7 +516,11 @@ console.log("userDaa",userData)
         </div>
         <div className="hidden lg:flex lg:w-1/2 mx-auto lg:my-auto">
           <div className="mx-auto flex justify-center">
-            <img className="lg:max-h-[540px] xl:min-h-full justify-center" src={login} alt="Login" />
+            <img
+              className="lg:max-h-[540px] xl:min-h-full justify-center"
+              src={login}
+              alt="Login"
+            />
           </div>
         </div>
       </div>
@@ -558,19 +538,21 @@ console.log("userDaa",userData)
               className="w-full p-2 pl-5 xl:p-3 border border-black rounded-lg focus:outline-primary"
               name="code"
               id="code"
-              placeholder= {t("Enter Verification Code")}
+              placeholder={t("Enter Verification Code")}
               value={verifiactionToken}
-              onChange={(e)=>setVerificationToken(e.target.value)}
+              onChange={(e) => setVerificationToken(e.target.value)}
             />
             <div className="space-y-2">
-              <button className="p-2 w-full flex justify-center text-lg xl:text-xl font-medium"
-              onClick={handleResendOTP}
+              <button
+                className="p-2 w-full flex justify-center text-lg xl:text-xl font-medium"
+                onClick={handleResendOTP}
               >
                 {t("Resend Code")}
               </button>
               <button
                 onClick={handleVerifyOTP}
-                className="p-2 w-full flex justify-center text-xl xl:text-2xl font-bold rounded-md text-white bg-primary">
+                className="p-2 w-full flex justify-center text-xl xl:text-2xl font-bold rounded-md text-white bg-primary"
+              >
                 {t("Verify")}
               </button>
             </div>

@@ -24,7 +24,7 @@ export const fetchTeacherData = createAsyncThunk(
 
       // Fetch user profile to extract teacher ID
       const userResponse = await axios.get(
-        "https://academy-gpt-backend.onrender.com/users/me/",
+        "https://academy-gpt-backend.onrender.com/users/me",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -32,7 +32,6 @@ export const fetchTeacherData = createAsyncThunk(
           },
         }
       );
-
       const teacherId =
         userResponse.data?.data?.data?.teacher_id ||
         userResponse.data?.data?.teacher_id ||
@@ -61,8 +60,11 @@ export const fetchTeacherData = createAsyncThunk(
         email: userResponse.data.email || "",
         first_name: userResponse.data.first_name || "",
         last_name: userResponse.data.last_name || "",
-        username: `${userResponse.data.first_name || ""} ${userResponse.data.last_name || ""}`.trim(),
-        profile_picture: userResponse.data.profile_picture || "/default-avatar.png",
+        username: `${userResponse.data.first_name || ""} ${
+          userResponse.data.last_name || ""
+        }`.trim(),
+        profile_picture:
+          userResponse.data.profile_picture || "/default-avatar.png",
         teacher_profile: {
           id: teacherData.id,
           description: teacherData.description || "",
@@ -83,6 +85,7 @@ export const fetchTeacherData = createAsyncThunk(
         },
       };
     } catch (error) {
+      console.log("errir", error);
       return rejectWithValue({
         message: error.message,
         status: error.response?.status,

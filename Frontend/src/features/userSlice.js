@@ -12,7 +12,7 @@ export const fetchUserData = createAsyncThunk(
     try {
       // Step 1: Fetch user profile
       const profileResponse = await axios.get(
-        "https://academy-gpt-backend.onrender.com/users/me/",
+        "https://academy-gpt-backend.onrender.com/users/me",
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -13,6 +13,23 @@ import pencil from "../assets/Image/pencil.svg";
 import undo from "../assets/Image/undo.svg";
 import redo from "../assets/Image/redo.svg";
 
+const NotificationBanner = () => (
+  <div style={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    backgroundColor: '#ff8000',
+    color: '#000',
+    textAlign: 'center',
+    padding: '10px 0',
+    zIndex: 1000,
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+  }}>
+    Sorunuz öğretmenlere iletildi, ilk tıklayan öğretmen bu online sınıfta size bağlanacak.
+  </div>
+);
+
 const WhiteBoard = () => {
   const containerRef = useRef(null);
   const [gridMode, setGridMode] = useState(false);
@@ -32,6 +49,7 @@ const WhiteBoard = () => {
   const [appState, setAppState] = useState({});
   const [alignment, setAlignment] = useState("left");
   const [isPortrait, setIsPortrait] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
     if (!excalidrawAPI) {
@@ -53,6 +71,20 @@ const WhiteBoard = () => {
       window.removeEventListener('resize', checkOrientation);
     };
   }, [excalidrawAPI]);
+
+  useEffect(() => {
+    // Check if the current mode is desktop and show the banner
+    if (window.innerWidth > 768) { // Adjust breakpoint as per your design
+      setShowBanner(true);
+  
+      // Set a timer to hide the banner after 5 minutes
+      const timer = setTimeout(() => {
+        setShowBanner(false);
+      }, 5000); // 300,000 ms = 5 minutes
+  
+      return () => clearTimeout(timer); // Cleanup timer
+    }
+  }, []);
 
   const toggleDrawer = () => setCollapsed(!collapsed);
 
@@ -336,7 +368,8 @@ const WhiteBoard = () => {
   return (
     isPortrait ? (
       <div style={{ position: 'fixed', top: 0, left: 0, right: 0, backgroundColor: 'red', color: 'white', padding: '10px', textAlign: 'center' }}>
-        This app does not support portrait mode on mobile. Please switch to landscape mode.
+        Sorunuz öğretmenlere iletildi,ilk tıklayan öğretmen online sınıfta size bağlanacak
+        Online sınıfa katılmak için telefonunuzu yatay çeviriniz.
       </div>
     ) :
     <>
@@ -344,6 +377,7 @@ const WhiteBoard = () => {
         className="whiteboard"
         ref={containerRef}
         style={{ height: "100vh", width: "100%" }}>
+          {showBanner && <NotificationBanner />}
         <div className="colorBarContainer">
           <ColorToolBar onChangeBackground={handleBackgroundColor} />
           <TextFormatToolBar

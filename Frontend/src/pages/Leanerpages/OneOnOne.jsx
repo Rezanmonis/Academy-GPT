@@ -7,6 +7,8 @@ import placeholderImg from "../../assets/Image/person.png";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import apiService from "../../services/apiServices";
+import { toast } from "react-toastify";
 
 const OneOnOne = () => {
   const [tutors, setTutors] = useState([]);
@@ -18,117 +20,139 @@ const OneOnOne = () => {
   const token =
     localStorage.getItem("token") || sessionStorage.getItem("token");
 
-const location = useLocation();
-const queryParams = new URLSearchParams(location.search);
-const subjectFromQuery = queryParams.get("subject");
-const { t } = useTranslation();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const subjectFromQuery = queryParams.get("subject");
+  const { t } = useTranslation();
+  localStorage.setItem("class_type", 1);
+  // useEffect(() => {
+  //   const fetchTutors = async () => {
+  //     try {
+  //       if (!token) {
+  //         console.error("Token not available. Please log in.");
 
+  //         return;
+  //       }
+
+  //       const response = await fetch("https://academy-gpt-backend.onrender.com/teachers/", {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`, // Include the token here
+  //           "Content-Type": "application/json",
+  //         },
+  //       });
+
+  //       if (!response.ok) {
+  //         const errorData = await response.json();
+  //         console.error("Error fetching tutors:", errorData.detail);
+
+  //         return;
+  //       }
+
+  //       const data = await response.json();
+
+  //       if (data?.data) {
+  //         const enrichedTutors = await Promise.all(
+  //           data.data.map(async (tutor) => {
+  //             const userResponse = await fetch(
+  //               `https://academy-gpt-backend.onrender.com/users/${tutor.user}/`,
+  //               {
+  //                 headers: {
+  //                   Authorization: `Bearer ${token}`,
+  //                   "Content-Type": "application/json",
+  //                 },
+  //               }
+  //             );
+
+  //             if (!userResponse.ok) {
+  //               return tutor; // Return tutor data without enrichment if the user fetch fails
+  //             }
+
+  //             const userDetails = await userResponse.json();
+  //             return {
+  //               ...tutor,
+  //               username: `${userDetails?.data?.first_name || "N/A"} ${
+  //                 userDetails?.data?.last_name || ""
+  //               }`.trim(),
+  //               profile_picture:
+  //                 userDetails?.data?.profile_picture || placeholderImg,
+  //               email: userDetails?.data?.email || "",
+  //               subject: tutor.subject || "N/A",
+  //             };
+  //           })
+  //         );
+
+  //         setTutors(enrichedTutors);
+  //         setFilteredTutors(enrichedTutors);
+
+  //         // Apply subject filter if subject is present in the query
+  //         if (subjectFromQuery) {
+  //           const filtered = enrichedTutors.filter(
+  //             (tutor) =>
+  //               tutor.subject?.toLowerCase() === subjectFromQuery.toLowerCase()
+  //           );
+  //           setFilteredTutors(filtered);
+  //           setSelectedSubject(subjectFromQuery); // Set the selected subject
+  //           setIsFilterApplied(true);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching tutors:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchTutors();
+  // }, [token, subjectFromQuery]);
+
+  const getAllTeachers = async (type) => {
+    const response = await apiService({
+      method: "GET",
+      endpoint: `teachers/tutors-list`,
+      // data: { ids: slotIdsToDelete },
+    });
+
+    if (response) {
+      console.log("Patch Successful:", response);
+      // toast.success(response.message);
+      // setSlotsToDelete([]);
+      // getSlots();
+      setTutors(response.results);
+      setFilteredTutors(response.data);
+      setLoading(false);
+    } else {
+      toast.error(response.message);
+    }
+    console.log("response ===>", response);
+  };
+  console.log("setTutors", filteredTutors);
   useEffect(() => {
-    const fetchTutors = async () => {
-      try {
-        if (!token) {
-          console.error("Token not available. Please log in.");
+    getAllTeachers();
+  }, []);
 
-          return;
-        }
-
-        const response = await fetch("https://academy-gpt-backend.onrender.com/teachers/", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token here
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Error fetching tutors:", errorData.detail);
-
-          return;
-        }
-
-        const data = await response.json();
-
-        if (data?.data) {
-          const enrichedTutors = await Promise.all(
-            data.data.map(async (tutor) => {
-              const userResponse = await fetch(
-                `https://academy-gpt-backend.onrender.com/users/${tutor.user}/`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                  },
-                }
-              );
-
-              if (!userResponse.ok) {
-                return tutor; // Return tutor data without enrichment if the user fetch fails
-              }
-
-              const userDetails = await userResponse.json();
-              return {
-                ...tutor,
-                username: `${userDetails?.data?.first_name || "N/A"} ${
-                  userDetails?.data?.last_name || ""
-                }`.trim(),
-                profile_picture:
-                  userDetails?.data?.profile_picture || placeholderImg,
-                email: userDetails?.data?.email || "",
-                subject: tutor.subject || "N/A",
-              };
-            })
-          );
-
-          setTutors(enrichedTutors);
-          setFilteredTutors(enrichedTutors);
-
-          // Apply subject filter if subject is present in the query
-          if (subjectFromQuery) {
-            const filtered = enrichedTutors.filter(
-              (tutor) =>
-                tutor.subject?.toLowerCase() === subjectFromQuery.toLowerCase()
-            );
-            setFilteredTutors(filtered);
-            setSelectedSubject(subjectFromQuery); // Set the selected subject
-            setIsFilterApplied(true);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching tutors:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTutors();
-  }, [token, subjectFromQuery]);
-
-   const handleApplyFilter = () => {
-     if (selectedSubject) {
-       const filtered = tutors.filter(
-         (tutor) =>
-           tutor.subject?.toLowerCase() === selectedSubject.toLowerCase()
-       );
+  console.log("tutors===>", tutors);
+  const handleApplyFilter = () => {
+    if (selectedSubject) {
+      const filtered = tutors.filter(
+        (tutor) =>
+          tutor.subject?.toLowerCase() === selectedSubject.toLowerCase()
+      );
       setFilteredTutors(filtered);
       setIsFilterApplied(true);
-     } else {
-       setFilteredTutors(tutors);
-       setIsFilterApplied(false); // Reset to all tutors if no subject selected
-     }
-     setShowFilter(false); // Close the filter modal
-   };
-
-
-
-    if (loading) {
-      return (
-        <div className="flex justify-center items-center h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-        </div>
-      );
+    } else {
+      setFilteredTutors(tutors);
+      setIsFilterApplied(false); // Reset to all tutors if no subject selected
     }
+    setShowFilter(false); // Close the filter modal
+  };
 
- 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -138,10 +162,12 @@ const { t } = useTranslation();
             className="my-auto"
             initial={{ x: -100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.3, type: "tween" }}>
+            transition={{ delay: 0.3, type: "tween" }}
+          >
             <h2 className="text-xs lg:text-sm xl:text-base font-normal">
               <span className="text-primary text-base lg:text-xl xl:text-2xl font-semibold">
-                {filteredTutors.length}{ t("Tutors Found")}
+                {filteredTutors?.length}
+                {t("Tutors Found")}
               </span>{" "}
               {isFilterApplied
                 ? `for Subject: ${selectedSubject}`
@@ -151,19 +177,21 @@ const { t } = useTranslation();
           <div className="my-auto">
             <button
               onClick={() => setShowFilter(true)}
-              className="bg-primary p-1 px-3 rounded text-xs lg:text-sm xl:text-lg font-semibold text-white">
-             {t("Filters")}
+              className="bg-primary p-1 px-3 rounded text-xs lg:text-sm xl:text-lg font-semibold text-white"
+            >
+              {t("Filters")}
             </button>
-          </div>  
+          </div>
         </div>
 
-        {filteredTutors.map((tutor) => (
+        {filteredTutors?.map((tutor) => (
           <motion.div
             key={tutor.id}
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.5, type: "spring" }}
-            className="border-2 md:flex col-span-5 z-20 rounded-md drop-shadow-md p-2 mt-4">
+            className="border-2 md:flex col-span-5 z-20 rounded-md drop-shadow-md p-2 mt-4"
+          >
             <div className="md:w-3/12">
               <div className="flex md:block relative md:static space-x-2 md:space-x-0 lg:space-y-1 bg-[#F6F6F6] py-2 pb-3">
                 <img
@@ -244,8 +272,9 @@ const { t } = useTranslation();
 
                 <div>
                   <Link
-                    to={`tutordetails/${tutor.id}`}
-                    className="p-2 rounded-md text-xs md:text-sm xl:text-lg font-semibold text-white bg-primary">
+                    to={`tutordetails/${tutor.teacher_id}`}
+                    className="p-2 rounded-md text-xs md:text-sm xl:text-lg font-semibold text-white bg-primary"
+                  >
                     {t("View Profile")}
                   </Link>
                 </div>
@@ -264,7 +293,8 @@ const { t } = useTranslation();
                 <select
                   className="w-full text-lg border-[1px] rounded-md p-2 border-black/50"
                   value={selectedSubject}
-                  onChange={(e) => setSelectedSubject(e.target.value)}>
+                  onChange={(e) => setSelectedSubject(e.target.value)}
+                >
                   <option value="">All Subjects</option>
                   <option value="Chemistry">Chemistry</option>
                   <option value="Math">Math</option>
@@ -277,12 +307,14 @@ const { t } = useTranslation();
               <div className="flex justify-center space-x-3">
                 <button
                   className="p-1 px-2 text-xl font-bold rounded-md text-white bg-primary"
-                  onClick={handleApplyFilter}>
+                  onClick={handleApplyFilter}
+                >
                   Apply
                 </button>
                 <button
                   className="p-1 px-2 rounded-md text-xl font-bold text-primary border-primary border-[1px]"
-                  onClick={() => setShowFilter(false)}>
+                  onClick={() => setShowFilter(false)}
+                >
                   Cancel
                 </button>
               </div>
@@ -294,4 +326,4 @@ const { t } = useTranslation();
   );
 };
 
-export default OneOnOne; 
+export default OneOnOne;
