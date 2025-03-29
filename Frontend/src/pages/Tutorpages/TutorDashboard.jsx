@@ -174,7 +174,7 @@ const TutorDashboard = () => {
                   <div className="flex space-x-2">
                     <div className="my-auto">
                       <h4 className="flex text-base md:text-lg lg:text-2xl font-semibold whitespace-nowrap">
-                        {t("Student Id:")} {student.booking_details.student}
+                       {student.booking_details.student_first_name}
                       </h4>
                       <p className="text-[9.9px] md:text-xs lg:text-base font-medium text-black/60 whitespace-nowrap">
                         {t("Subject Name")}
@@ -210,7 +210,7 @@ const TutorDashboard = () => {
                     <IoMdCheckmarkCircle className="my-auto text-[#A4A4A4] size-5 lg:size-6" />
                   </div>
                   <p className="text-[9.5px] md:text-xs whitespace-nowrap xl:text-base font-medium text-black/60">
-                    {student.booking_details.booking_date ? new Date(student.start_time).toLocaleDateString('en-US', {
+                    {student?.start_time ? new Date(student.start_time).toLocaleDateString('en-US', {
                       weekday: 'short',
                       month: 'short',
                       day: 'numeric'
