@@ -229,7 +229,7 @@ import axios from "axios";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import LoginNavbar from "../Componets/loginNavbar";
 import { updateUser } from "../features/userSlice";
-import { fetchTeacherData } from "../features/teacherSlice"; // Correct import
+import { fetchTeacherData, updateTeacher } from "../features/teacherSlice"; // Correct import
 import facebook from "../assets/Image/facebook.png";
 import google from "../assets/Image/google.png";
 import apple from "../assets/Image/apple.png";
@@ -290,7 +290,7 @@ const LoginPages = () => {
         setShowNumberCode(true);
         setUserData(response.data)
       }
-      if (response.data?.statusCode === 200 && response.data?.data?.access) {
+      if (response.data?.status) { 
         const { access, user } = response.data.data;
         setUserData
         if (rememberMe) {
@@ -308,7 +308,7 @@ const LoginPages = () => {
           );
           navigate("/leanernavbar");
         } else if (user.is_teacher) {
-          dispatch(fetchTeacherData()); // Corrected to fetch teacher profile
+          // dispatch(updateTeacher()); // Corrected to fetch teacher profile
           navigate("/tutornavbar");
         } else {
           setError("Unknown user role.");
@@ -321,6 +321,8 @@ const LoginPages = () => {
 
     } catch (err) {
       console.error(err);
+      toast.error(err.response.data?.message);
+
       setError(err.response?.data?.detail || "Login failed.");
     } finally {
       setIsLoading(false);
@@ -399,7 +401,7 @@ console.log("calllllllll---.",response)
   const handleResendOTP =async ()=>{
     try {
       const response = await axios.post(
-        `https://academy-gpt-backend.onrender.com/auth/resend-mfa-code`,
+        `${baseURL}auth/resend-mfa-code`,
         {
           email:email
         }
@@ -580,4 +582,3 @@ console.log("userDaa",userData)
 };
 
 export default LoginPages;
-
