@@ -1,14 +1,75 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
+import { useSelector } from "react-redux";
 import { PiCameraLight } from "react-icons/pi";
-import { LuSendHorizonal } from "react-icons/lu";
+// import { LuSendHorizonal } from "react-icons/lu";
 import Webcam from "react-webcam";
 import { IoMdAttach } from "react-icons/io";
 import ReactMarkdown from "react-markdown";
 import { useTranslation } from "react-i18next";
 
 import "./AskQuestion.css";
+import { motion } from "framer-motion";
+
+// Image processing helper function
+const processImage = async (imageFile) => {
+  return new Promise((resolve, reject) => {
+    // Check file type
+    if (!imageFile.type.match(/^image\/(jpeg|png)$/)) {
+      reject(new Error("Only JPEG and PNG images are allowed"));
+      return;
+    }
+
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      img.src = e.target.result;
+      img.onload = () => {
+        // Create canvas for resizing
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        // Max dimensions
+        const MAX_WIDTH = 1200;
+        const MAX_HEIGHT = 1200;
+
+        // Resize if needed
+        if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+          if (width > height) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          } else {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert to Blob
+        canvas.toBlob(
+          (blob) => {
+            resolve(
+              new File([blob], imageFile.name, {
+                type: "image/jpeg",
+                lastModified: Date.now(),
+              })
+            );
+          },
+          "image/jpeg",
+          0.8
+        );
+      };
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(imageFile);
+  });
+};
 
 function AskQuestion() {
   const [subject, setSubject] = useState("");
@@ -29,9 +90,7 @@ function AskQuestion() {
   const fileInputRef = useRef(null);
   const mobileCameraInputRef = useRef(null);
 
-  const navigate = useNavigate(); 
-  const { t } = useTranslation();
-
+  const { student_id } = useSelector((state) => state.user.user || {});
 
   useEffect(() => {
     const detectLanguage = () => {
@@ -52,7 +111,6 @@ function AskQuestion() {
   }, []);
 
   useEffect(() => {
- 
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [pastQA]);
 
@@ -64,11 +122,16 @@ function AskQuestion() {
     }
   };
 
-  const handleMobileCameraCapture = (e) => {
+  const handleMobileCameraCapture = async (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFile(file);
-      setInputText("Captured Image");
+      try {
+        const processedImage = await processImage(file);
+        setFile(processedImage);
+        setInputText("Captured Image");
+      } catch (error) {
+        alert(error.message);
+      }
     }
   };
 
@@ -76,10 +139,17 @@ function AskQuestion() {
     setInputText(e.target.value);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-    setInputText(selectedFile.name);
+    if (selectedFile) {
+      try {
+        const processedImage = await processImage(selectedFile);
+        setFile(processedImage);
+        setInputText(selectedFile.name);
+      } catch (error) {
+        alert(error.message);
+      }
+    }
   };
 
   const formatTextOnlyHistory = (history) => {
@@ -91,97 +161,121 @@ function AskQuestion() {
       }));
   };
 
+  const handleCaptureImage = async () => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    if (imageSrc) {
+      try {
+        // Convert base64 to blob
+        const response = await fetch(imageSrc);
+        const blob = await response.blob();
+        const imageFile = new File([blob], "captured-image.jpg", {
+          type: "image/jpeg",
+        });
+
+        const processedImage = await processImage(imageFile);
+        setCapturedImage(URL.createObjectURL(processedImage));
+        setFile(processedImage);
+        setCameraMode(false);
+        setInputText("Captured Image");
+      } catch (error) {
+        alert("Error processing captured image: " + error.message);
+      }
+    }
+  };
+
   const handleSend = async () => {
     if (!inputText.trim() && !file && !capturedImage) return;
 
-    if (preferredAnswer === "onlineClassroom") {
-     
-      const newQA = {
-        question: inputText,
-        answer:"Sorunuz Paylaşıldı",
-        image: null,
-        timestamp: new Date().toISOString(),
-      };
-
-      setPastQA((prev) => [...prev, newQA]);
-      setInputText("");
-      setFile(null);
-      setCapturedImage("");
-      setLoading(true);
-
-   
-      setTimeout(() => {
-        setLoading(false);
-        navigate("/leanernavbar/whiteboard");
-      }, 3000);
+    if (!student_id) {
+      alert("Student ID is not available. Please log in.");
       return;
     }
 
     setIsLoading(true);
-    const formData = new FormData();
 
-    let fullQuestion = "";
-    if (subject) {
-      fullQuestion = `${subject ? `Subject: ${subject}\n` : ""}`;
-    }
-    if (inputText) {
-      fullQuestion += `Question: ${inputText}`;
-    }
+    const fullQuestion = `Question: ${inputText}`;
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
 
     try {
       let response;
 
-      if (file || capturedImage) {
-        if (file) formData.append("image", file);
-        if (capturedImage) {
-          const blob = await fetch(capturedImage).then((r) => r.blob());
-          formData.append("image", blob, "captured-image.jpg");
+      if (preferredAnswer === "onlineClassroom") {
+        const formData = new FormData();
+        formData.append("student_id", student_id);
+        formData.append("query", fullQuestion);
+        formData.append("subject", subject);
+
+        if (file) {
+          formData.append("image", file);
         }
-        formData.append("question", fullQuestion);
-        formData.append("language", userLanguage);
 
         response = await axios.post(
-          "https://academy-gpt.onrender.com/api/chat-with-image",
+          "https://api.academygpt.net/courses/student-queries",
           formData,
           {
-            headers: { "Content-Type": "multipart/form-data" },
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
           }
         );
 
-        setConversationId(null);
+        const newQA = {
+          question: fullQuestion,
+          answer: response.data.response || "Query submitted successfully.",
+          image: file ? URL.createObjectURL(file) : null,
+          timestamp: new Date().toISOString(),
+          conversationId: null,
+          subject,
+        };
+
+        setPastQA((prev) => [...prev, newQA]);
+        setInputText("");
+        setFile(null);
+        setCapturedImage(null);
       } else {
-        const textOnlyHistory = formatTextOnlyHistory(pastQA);
-        const relevantHistory = conversationId ? textOnlyHistory : [];
+        const formData = new FormData();
 
-        response = await axios.post(
-          "https://academy-gpt.onrender.com/api/chat",
-          {
-            question: fullQuestion,
-            preferredAnswer: preferredAnswer,
-            chatHistory: relevantHistory,
-            conversationId: conversationId,
-            language: userLanguage,
-            resetConversation: conversationId === null,
-          }
-        );
+        if (file) {
+          formData.append("image", file);
+          formData.append("question", fullQuestion);
+          formData.append("language", userLanguage);
+
+          response = await axios.post(
+            "https://academy-gpt.onrender.com/api/chat-with-image",
+            formData,
+            {
+              headers: { "Content-Type": "multipart/form-data" },
+            }
+          );
+        } else {
+          response = await axios.post(
+            "https://academy-gpt.onrender.com/api/chat",
+            {
+              question: fullQuestion,
+              chatHistory: conversationId ? formatTextOnlyHistory(pastQA) : [],
+              conversationId: conversationId,
+              language: userLanguage,
+              resetConversation: conversationId === null,
+            }
+          );
+        }
+
+        const newQA = {
+          question: fullQuestion,
+          answer: response.data.response,
+          image: file ? URL.createObjectURL(file) : null,
+          timestamp: new Date().toISOString(),
+          conversationId: conversationId,
+          subject,
+        };
+
+        setPastQA((prev) => [...prev, newQA]);
+        setInputText("");
+        setFile(null);
+        setCapturedImage(null);
       }
-
-      const newQA = {
-        question: fullQuestion,
-        answer: response.data.response,
-        image: file || capturedImage || null,
-        timestamp: new Date().toISOString(),
-        conversationId: conversationId,
-        subject,
-      };
-
-      setPastQA((prev) => [...prev, newQA]);
-
-      setInputText("");
-      setFile(null);
-      setCapturedImage("");
-      if (fileInputRef.current) fileInputRef.current.value = "";
-      if (mobileCameraInputRef.current) mobileCameraInputRef.current.value = "";
     } catch (error) {
       console.error("Error details:", error.response?.data || error.message);
       alert(
@@ -192,13 +286,6 @@ function AskQuestion() {
     }
   };
 
-  const handleCaptureImage = () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    setCapturedImage(imageSrc);
-    setCameraMode(false);
-    setInputText("Captured Image");
-  };
-
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -206,16 +293,10 @@ function AskQuestion() {
     }
   };
 
-  const startNewConversation = () => {
-    setConversationId(null);
-    setSubject("");
-    setPastQA([]); 
-  };
-
   const renderAnswer = (answer) => {
     return (
       <div className="answer-container">
-        <p className="answer-label">AI Answer:</p>
+        <p className="answer-label">Answer:</p>
         <ReactMarkdown
           className="markdown-content"
           components={{
@@ -232,15 +313,11 @@ function AskQuestion() {
     );
   };
 
-  if (loading || isLoading) {
-    // Render spinner during the 3-second delay
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
+  const startNewConversation = () => {
+    setConversationId(null);
+    setSubject("");
+    setPastQA([]);
+  };
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
@@ -278,13 +355,9 @@ function AskQuestion() {
                       <p>{qa.question}</p>
                       {qa.image && (
                         <img
-                          src={
-                            typeof qa.image === "string"
-                              ? qa.image
-                              : URL.createObjectURL(qa.image)
-                          }
+                          src={qa.image}
                           alt="Attached"
-                          className="mt-2 rounded-md object-cover"
+                          className="mt-2 rounded-md object-cover max-w-full h-auto"
                         />
                       )}
                     </div>
@@ -296,7 +369,11 @@ function AskQuestion() {
             </div>
           </div>
 
-          <div className="sticky z-50 bottom-0 space-y-2 xl:w-full bg-white w-full">
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.6, type: "spring" }}
+            className="sticky z-30 bottom-0 space-y-2 xl:w-full bg-white w-full">
             <div className="flex items-center space-x-5 px-2">
               <p className="text-lg font-semibold">
               {t("Preferred Answer")}
@@ -339,14 +416,14 @@ function AskQuestion() {
                 <input
                   id="fileInput"
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png"
                   onChange={handleFileChange}
                   ref={fileInputRef}
                   className="hidden"
                 />
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png"
                   capture="environment"
                   onChange={handleMobileCameraCapture}
                   ref={mobileCameraInputRef}
@@ -373,10 +450,10 @@ function AskQuestion() {
                 className={`p-2 rounded-full ${
                   isLoading ? "bg-gray-400" : "bg-primary hover:bg-primary"
                 } text-white`}>
-                <LuSendHorizonal className="text-2xl" />
+                {/* <LuSendHorizonal className="text-2xl" /> */}
               </button>
             </div>
-          </div>
+          </motion.div>
         </form>
       </div>
 

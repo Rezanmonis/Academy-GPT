@@ -8,12 +8,19 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { IoIosArrowForward } from "react-icons/io";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import DottedLoader from "../Componets/Loader";
 
 // Languages list
 const initialLanguages = [
   { value: "en", label: "English", flag: "https://flagcdn.com/us.svg" },
   { value: "es", label: "Spanish", flag: "https://flagcdn.com/es.svg" },
   { value: "fr", label: "French", flag: "https://flagcdn.com/fr.svg" },
+  { value: "tr", label: "Turkish", flag: "https://flagcdn.com/tr.svg" },
+  { value: "ar", label: "Arabic", flag: "https://flagcdn.com/sa.svg" },
+  { value: "hi", label: "Hindi", flag: "https://flagcdn.com/in.svg" },
+  { value: "zh", label: "Chinese", flag: "https://flagcdn.com/cn.svg" },
 ];
 
 const ApplyNowPage = () => {
@@ -31,7 +38,13 @@ const ApplyNowPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState(null);
+  const [verifiactionToken, setVerificationToken] = useState();
+  const [userData, setUserData] = useState();
+  const [apiLoading, setApiLoading] = useState(false);
+
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const baseURL = import.meta.env.VITE_BASE_URL;
 
   const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
   const toggleConfirmPasswordVisibility = () =>
@@ -61,8 +74,9 @@ const ApplyNowPage = () => {
       .join(", ");
 
     try {
+      setApiLoading(true);
       const response = await axios.post(
-        "https://api.academygpt.net/api/auth/registration",
+        "https://academy-gpt-backend.onrender.com/api/auth/registration",
         {
           email: email,
           password1: password,
@@ -75,34 +89,33 @@ const ApplyNowPage = () => {
           languages: formattedLanguages,
         }
       );
-
-      if (response.status === 201) {
+      console.log("response", response);
+      if (response.data.status) {
         setShowNumberCode(true);
+        setUserData(response.data.data);
+        setApiLoading(false);
       }
     } catch (error) {
-      if (error.response) {
+      if (error.response.status == 400) {
         console.error("Response data:", error.response.data); // Backend response
         console.error("Status code:", error.response.status);
         console.error("Headers:", error.response.headers);
-        setError(
-          error.response.data.detail ||
-            "Server error occurred. Please try again."
-        );
+
+        toast.error(error.response.data.message);
       } else if (error.request) {
-        console.error("Request error:", error.request);
         setError("No response from server. Please check your connection.");
       } else {
-        console.error("Error", error.message);
         setError("Registration failed. Please try again.");
       }
+      setApiLoading(false);
     }
-
   };
 
   const customOption = (props) => (
     <div
       {...props.innerProps}
-      className="flex items-center my-auto p-2 cursor-pointer ">
+      className="flex items-center my-auto p-2 cursor-pointer "
+    >
       <img
         src={props.data.flag}
         alt="flag"
@@ -120,16 +133,69 @@ const ApplyNowPage = () => {
     setSelectedLanguages([...selectedLanguages, newLanguage]);
   };
 
+  const handleVerifyOTP = async () => {
+    try {
+      const response = await axios.post(`${baseURL}api/auth/verify-mfa`, {
+        user: userData.user,
+        token: verifiactionToken,
+      });
+
+      if (response.data.status) {
+        sessionStorage.setItem("token", response.data.data.access);
+
+        navigate("/tutornavbar");
+      }
+    } catch (error) {
+      if (error.response.status === 400) {
+        console.error("Response data:", error.response.data); // Backend response
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+        setError("Server error occurred. Please try again.");
+        toast.error(error.response.data?.message);
+      } else if (error.request) {
+        setError("No response from server. Please check your connection.");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    }
+  };
+
+  const handleResendOTP = async () => {
+    try {
+      const response = await axios.post(`${baseURL}api/auth/resend-mfa-code`, {
+        email: email,
+      });
+
+      if (response.data.status) {
+        setShowNumberCode(true);
+        toast.success(response.data?.message);
+      }
+    } catch (error) {
+      if (error.response.status === 400) {
+        console.error("Response data:", error.response.data); // Backend response
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+        setError("Server error occurred. Please try again.");
+        toast.error(error.response.data?.message);
+        
+      } else if (error.request) {
+        setError("No response from server. Please check your connection.");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    }
+  };
+
   return (
     <>
       <LoginNavbar />
       <div className="lg:flex mt-8 px-8 xl:py-5 relative font-urbanist">
         <div className="lg:w-1/2 md:px-16 lg:px-6 md:my-auto">
           <h2 className="text-center text-4xl xl:text-3xl font-bold">
-            Apply Now
+            {t("Apply Now")}
           </h2>
           <p className="text-center text-black/70 text-lg font-medium xl:text-2xl">
-            To be listed on simex
+            {t("Ap cap")}
           </p>
 
           <form className="py-5 space-y-4" onSubmit={handleRegister}>
@@ -139,7 +205,7 @@ const ApplyNowPage = () => {
               name="firstName"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              placeholder="First Name"
+              placeholder={t("First Name")}
               className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
               autoComplete="given-name"
             />
@@ -149,7 +215,7 @@ const ApplyNowPage = () => {
               name="lastName"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              placeholder="Last Name"
+              placeholder={t("Last Name")}
               className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
               autoComplete="family-name"
             />
@@ -160,7 +226,7 @@ const ApplyNowPage = () => {
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
+              placeholder={t("Email")}
               className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
               autoComplete="email"
             />
@@ -173,7 +239,7 @@ const ApplyNowPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
-                placeholder="Create Password"
+                placeholder={t("CPassword")}
                 autoComplete="new-password"
               />
               {passwordVisible ? (
@@ -199,7 +265,7 @@ const ApplyNowPage = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
-                placeholder="Confirm Password"
+                placeholder={t("Confirm Password")}
                 autoComplete="new-password"
               />
               {confirmPasswordVisible ? (
@@ -250,10 +316,7 @@ const ApplyNowPage = () => {
                   Option: customOption,
                 }}
               />
-              <p className="text-sm font-medium py-1">
-                Select your preferred{" "}
-                <span className="text-primary">language</span> for lessons.
-              </p>
+              <p className="text-sm font-medium py-1">{t("Languages cap")}</p>
             </div>
 
             {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -262,16 +325,18 @@ const ApplyNowPage = () => {
               <button
                 type="submit"
                 onClick={handleRegister}
-                className="p-2 w-full lg:w-72 flex justify-center text-2xl font-bold rounded-md text-white bg-primary">
-                Next <IoIosArrowForward className="my-auto ml-3" />
+                className="p-2 w-full lg:w-72 flex justify-center text-2xl font-bold rounded-md text-white bg-primary"
+              >
+                {apiLoading ? <DottedLoader /> : t("Next")}{" "}
+                <IoIosArrowForward className="my-auto ml-3" />
               </button>
             </div>
           </form>
 
           <p className="hidden lg:block text-center text-sm font-medium">
-            Already have an account?{" "}
+            {t("Already have an account")}?{" "}
             <span className="text-primary">
-              <Link to="/loginpage">Login</Link>
+              <Link to="/loginpage">{t("Login")}</Link>
             </span>
           </p>
         </div>
@@ -291,26 +356,32 @@ const ApplyNowPage = () => {
         <div className="fixed top-0 left-0 w-full h-full font-urbanist px-10 bg-black bg-opacity-60 z-50 flex justify-center items-center">
           <div className="bg-white rounded-xl p-6 space-y-3 shadow-xl px-7 lg:w-5/12 xl:w-2/6">
             <h2 className="font-semibold text-center whitespace-nowrap text-2xl xl:text-[26px]">
-              Enter Verification
+              {t("Enter Verification ")}
               <br />
-              Code Just Sent To Phone No
+              {t("Code Just Sent To Phone No.")}
               <br />
-              Address
+              {t("Address")}
             </h2>
             <input
               className="w-full p-2 pl-5 xl:p-3 border border-black rounded-lg focus:outline-primary"
               name="code"
               id="code"
-              placeholder="Enter Verification code"
+              placeholder={t("Enter Verification Code")}
+              value={verifiactionToken}
+              onChange={(e) => setVerificationToken(e.target.value)}
             />
             <div className="space-y-2">
-              <button className="p-2 w-full flex justify-center text-lg xl:text-xl font-medium">
-                Resend Code
+              <button
+                className="p-2 w-full flex justify-center text-lg xl:text-xl font-medium"
+                onClick={handleResendOTP}
+              >
+                {t("Resend Code")}
               </button>
               <button
-                onClick={() => navigate("/tutornavbar")}
-                className="p-2 w-full flex justify-center text-xl xl:text-2xl font-bold rounded-md text-white bg-primary">
-                Verify
+                onClick={handleVerifyOTP}
+                className="p-2 w-full flex justify-center text-xl xl:text-2xl font-bold rounded-md text-white bg-primary"
+              >
+                {t("Verify")}
               </button>
             </div>
           </div>

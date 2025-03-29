@@ -1,26 +1,28 @@
 
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 
 const Review = () => {
 
-
+  const { t } = useTranslation();
 
 
 
   return (
     <>
-      <div className="font-urbanist px-3">
+      <div className="font-urbanist px-3 py-2">
         <div className="flex justify-between">
           <div>
               <Link
                 className=" p-1 xl:p-2 px-2 xl:px-4 text-white text-[10px] md:text-xs lg:text-sm xl:text-lg rounded-md bg-primary font-bold"
                 to={"writereview"}>
-                Write a Review
+                {t("Write a Review")}
               </Link>
           </div>
           <div className="border-[1px]  p-1 px-2 border-black/60 rounded-md">
             <p className="my-auto text-[10px] md:text-xs lg:text-sm xl:text-lg font-medium">
-              Total : 122
+              {t("Total")} : 122
             </p>
           </div>
         </div>

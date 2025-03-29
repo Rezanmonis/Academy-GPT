@@ -10,6 +10,12 @@ import signupImage from "../assets/Image/Sign_up.png";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import { updateUser } from "../features/userSlice";
+
+import { useDispatch } from "react-redux";
+import DottedLoader from "../Componets/Loader";
 
 // Languages list
 const initialLanguages = [
@@ -37,6 +43,14 @@ const SignupPages = () => {
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [verifiactionToken, setVerificationToken] = useState();
+  const [userData, setUserData] = useState();
+  const [showNumberCode, setShowNumberCode] = useState(false);
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const [apiLoading, setApiLoading] = useState(false);
+
+  const baseURL = import.meta.env.VITE_BASE_URL;
 
   const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
   const toggleConfirmPasswordVisibility = () =>
@@ -44,20 +58,21 @@ const SignupPages = () => {
 
   const handleRegister = async (event) => {
     event.preventDefault();
-    
+
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
 
-    
     const formattedLanguages = selectedLanguages
       .map((lang) => lang.value)
       .join(",");
 
     try {
+      setApiLoading(true);
+
       const response = await axios.post(
-        "https://api.academygpt.net/api/auth/registration",
+        "https://academy-gpt-backend.onrender.com/api/auth/registration",
         {
           first_name: firstName,
           last_name: lastName,
@@ -71,14 +86,25 @@ const SignupPages = () => {
         }
       );
 
-      if (response.status === 201) {
-        navigate("/leanernavbar");
+      if (response.data.status) {
+        // navigate("/leanernavbar");
+        setShowNumberCode(true);
+
+        setUserData(response.data.data);
+        setApiLoading(false);
       }
     } catch (error) {
-      setError(
-        error.response?.data?.detail || "Registration failed. Please try again."
-      );
-      console.error("Registration error:", error);
+      if (error.response.status == 400) {
+        console.error("Response data:", error.response.data); // Backend response
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+        toast.error(error.response.data.message);
+      } else if (error.request) {
+        setError("No response from server. Please check your connection.");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+      setApiLoading(false);
     }
   };
 
@@ -96,14 +122,77 @@ const SignupPages = () => {
     setSelectedLanguages([...selectedLanguages, newLanguage]);
   };
 
+  const handleVerifyOTP = async () => {
+    try {
+      const response = await axios.post(`${baseURL}api/auth/verify-mfa`, {
+        user: userData.user,
+        token: verifiactionToken,
+      });
+
+      if (response.data.status) {
+        sessionStorage.setItem("token", response.data.data.access);
+
+        const responseData = response.data.data.user;
+        sessionStorage.setItem("token", response.data.data.access);
+
+        if (responseData.is_student) {
+          dispatch(
+            updateUser({
+              ...responseData,
+              username: `${responseData?.first_name} ${responseData?.last_name}`,
+            })
+          );
+          navigate("/leanernavbar");
+        }
+      }
+    } catch (error) {
+      if (error.response.status === 400) {
+        console.error("Response data:", error.response.data); // Backend response
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+        setError("Server error occurred. Please try again.");
+        toast.error(error.response.data?.message);
+      } else if (error.request) {
+        setError("No response from server. Please check your connection.");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    }
+  };
+
+  const handleResendOTP = async () => {
+    try {
+      const response = await axios.post(`${baseURL}api/auth/resend-mfa-code`, {
+        email: email,
+      });
+
+      if (response.data.status) {
+        setShowNumberCode(true);
+        toast.success(response.data?.message);
+      }
+    } catch (error) {
+      if (error.response.status === 400) {
+        console.error("Response data:", error.response.data); // Backend response
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+        setError("Server error occurred. Please try again.");
+        toast.error(error.response.data?.message);
+      } else if (error.request) {
+        setError("No response from server. Please check your connection.");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    }
+  };
+
   return (
     <>
       <LoginNavbar />
       <div className="lg:flex mt-8 px-8 xl:py-5 relative font-urbanist">
         <div className="lg:w-1/2 md:px-16 lg:px-6 md:my-auto">
-          <h2 className="text-center text-4xl font-bold">SIGN UP</h2>
+          <h2 className="text-center text-4xl font-bold">{t("SIGN UP")}</h2>
           <p className="text-center text-black/70 text-lg">
-            Create your student account.
+            {t("Create your student account.")}
           </p>
 
           <form className="py-5 space-y-4">
@@ -111,7 +200,7 @@ const SignupPages = () => {
               <input
                 type="text"
                 name="firstName"
-                placeholder="First Name"
+                placeholder={t("First Name")}
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
@@ -119,7 +208,7 @@ const SignupPages = () => {
               <input
                 type="text"
                 name="lastName"
-                placeholder="Last Name"
+                placeholder={t("Last Name")}
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
@@ -130,7 +219,7 @@ const SignupPages = () => {
               <input
                 type="email"
                 name="email"
-                placeholder="Email"
+                placeholder={t("Email")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
@@ -169,7 +258,7 @@ const SignupPages = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
-                placeholder="Password"
+                placeholder={t("CPassword")}
               />
             </div>
 
@@ -193,7 +282,7 @@ const SignupPages = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full p-2 pl-5 border border-black rounded-lg focus:outline-primary"
-                placeholder="Confirm Password"
+                placeholder={t("Confirm Password")}
               />
             </div>
 
@@ -207,24 +296,23 @@ const SignupPages = () => {
               components={{ Option: customOption }}
             />
 
-            <p className="text-sm font-medium py-1">
-              Select your preferred language(s) for lessons.
-            </p>
+            <p className="text-sm font-medium py-1">{t("Languages cap")}</p>
 
             {error && <p className="text-red-500 text-sm">{error}</p>}
 
             <button
               type="button"
               onClick={handleRegister}
-              className="p-2 w-full text-2xl font-bold rounded-md text-white bg-primary">
-              Sign Up
+              className="p-2 w-full text-2xl font-bold rounded-md text-white bg-primary"
+            >
+              {apiLoading ? <DottedLoader /> : t("Sign Up")}
             </button>
           </form>
 
           <p className="text-center text-sm font-medium">
-            Already have an account?{" "}
+            {t("Already have an account")}?{" "}
             <span className="text-primary">
-              <Link to="/loginpage">Login</Link>
+              <Link to="/loginpage">{t("Login")}</Link>
             </span>
           </p>
 
@@ -249,6 +337,41 @@ const SignupPages = () => {
           />
         </div>
       </div>
+      {showNumberCode && (
+        <div className="fixed top-0 left-0 w-full h-full font-urbanist px-10 bg-black bg-opacity-60 z-50 flex justify-center items-center">
+          <div className="bg-white rounded-xl p-6 space-y-3 shadow-xl px-7 lg:w-5/12 xl:w-2/6">
+            <h2 className="font-semibold text-center whitespace-nowrap text-2xl xl:text-[26px]">
+              {t("Enter Verification ")}
+              <br />
+              {t("Code Just Sent To Phone No.")}
+              <br />
+              {t("Address")}
+            </h2>
+            <input
+              className="w-full p-2 pl-5 xl:p-3 border border-black rounded-lg focus:outline-primary"
+              name="code"
+              id="code"
+              placeholder={t("Enter Verification Code")}
+              value={verifiactionToken}
+              onChange={(e) => setVerificationToken(e.target.value)}
+            />
+            <div className="space-y-2">
+              <button
+                className="p-2 w-full flex justify-center text-lg xl:text-xl font-medium"
+                onClick={handleResendOTP}
+              >
+                {t("Resend Code")}
+              </button>
+              <button
+                onClick={handleVerifyOTP}
+                className="p-2 w-full flex justify-center text-xl xl:text-2xl font-bold rounded-md text-white bg-primary"
+              >
+                {t("Verify")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

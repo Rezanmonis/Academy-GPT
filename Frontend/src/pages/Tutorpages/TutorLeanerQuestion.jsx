@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { IoIosSearch } from "react-icons/io";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
-const LearnerQuestions = () => {
+const TutorLearnerQuestions = () => {
   const [queries, setQueries] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   // Get `student_id` from userSlice
   const { student_id } = useSelector((state) => state.user.user || {});
@@ -14,6 +16,7 @@ const LearnerQuestions = () => {
   useEffect(() => {
     const fetchQueries = async () => {
       const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+      
 
       if (!token) {
         console.error("Authentication token not found. Please log in.");
@@ -79,14 +82,14 @@ const LearnerQuestions = () => {
         <div className="relative lg:flex lg:justify-between w-full col-span-4 lg:col-span-8">
           <div className="lg:w-7/12 relative">
             <button className="bg-primary absolute text-[10px] lg:text-xs lg:px-6 font-semibold right-[1px] top-[1px] p-[8px] lg:p-[8.5px] px-6 xl:py-3 xl:px-9 text-white rounded-r-md">
-              Search
+              {t("Search")}
             </button>
             <input
               className="w-full border-[1px] pl-8 placeholder:text-black placeholder:text-xs font-medium border-black p-[3.5px] lg:p-[4.5px] lg:pl-8 px-2 xl:p-2 xl:pl-8 rounded-md focus:outline-none"
               type="search"
               name="searchQuestion"
               id="searchQuestion"
-              placeholder="Search Questions ?"
+              placeholder={t("Search Questions ?")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -128,6 +131,14 @@ const LearnerQuestions = () => {
                   </p>
                 </div>
               </div>
+
+              <div className="flex justify-end">
+                  <div>
+                    <button className=" bg-[#046B49] p-1 px-2 text-xs lg:text-base xl:text-lg font-semibold text-white rounded-md">
+                      Answer Now
+                    </button>
+                  </div>
+                </div>
             </div>
           </div>
         ))}
@@ -136,7 +147,7 @@ const LearnerQuestions = () => {
         {filteredQueries.length === 0 && !loading && (
           <div className="col-span-4 lg:col-span-8 mt-5 text-center">
             <p className="text-lg font-semibold text-black/50">
-              No questions found.
+              {t("No questions found.")}
             </p>
           </div>
         )}
@@ -145,4 +156,4 @@ const LearnerQuestions = () => {
   );
 };
 
-export default LearnerQuestions;
+export default TutorLearnerQuestions;

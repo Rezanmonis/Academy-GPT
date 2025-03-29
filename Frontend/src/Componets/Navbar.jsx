@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "react-router-dom"; 
 import { useEffect } from "react";
+// import logo from "../assets/Image/Logo.png";
+import { Link,  } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
@@ -29,9 +31,13 @@ const Navbar = () => {
                   src={logo}
                   alt="logo"
                 /> */}
+<<<<<<< HEAD
                 <h2 className=" text-white my-auto whitespace-nowrap font-bold text-sm md:text-2xl lg:text-3xl justify-center items-center py-2 mt-1">
                   Academy GPT
                 </h2>
+=======
+                <h2 className=" text-white my-auto whitespace-nowrap font-bold text-sm md:text-2xl lg:text-3xl justify-center items-center py-2 mt-1">Academy GPT</h2>
+>>>>>>> f45eade1e848759bf203472faf31093fba17f41c
               </Link>
             </div>
 
