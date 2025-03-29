@@ -124,10 +124,20 @@ const SignupPages = () => {
 
   const handleVerifyOTP = async () => {
     try {
+
+      const response = await axios.post(
+        `https://academy-gpt-backend.onrender.com/api/auth/verify-mfa`,
+        {
+          user:userData.user,
+          token:verifiactionToken
+        }
+      );
+
       const response = await axios.post(`${baseURL}api/auth/verify-mfa`, {
         user: userData.user,
         token: verifiactionToken,
       });
+
 
       if (response.data.status) {
         sessionStorage.setItem("token", response.data.data.access);
