@@ -24,7 +24,7 @@ const OneOnOne = () => {
   const queryParams = new URLSearchParams(location.search);
   const subjectFromQuery = queryParams.get("subject");
   const { t } = useTranslation();
-
+  localStorage.setItem("class_type", 1);
   // useEffect(() => {
   //   const fetchTutors = async () => {
   //     try {
@@ -118,17 +118,18 @@ const OneOnOne = () => {
       // setSlotsToDelete([]);
       // getSlots();
       setTutors(response.results);
-      setFilteredTutors(response.results);
+      setFilteredTutors(response.data);
       setLoading(false);
     } else {
       toast.error(response.message);
     }
     console.log("response ===>", response);
   };
-
+  console.log("setTutors", filteredTutors);
   useEffect(() => {
     getAllTeachers();
   }, []);
+
   console.log("tutors===>", tutors);
   const handleApplyFilter = () => {
     if (selectedSubject) {
@@ -165,7 +166,7 @@ const OneOnOne = () => {
           >
             <h2 className="text-xs lg:text-sm xl:text-base font-normal">
               <span className="text-primary text-base lg:text-xl xl:text-2xl font-semibold">
-                {filteredTutors.length}
+                {filteredTutors?.length}
                 {t("Tutors Found")}
               </span>{" "}
               {isFilterApplied
@@ -183,7 +184,7 @@ const OneOnOne = () => {
           </div>
         </div>
 
-        {filteredTutors.map((tutor) => (
+        {filteredTutors?.map((tutor) => (
           <motion.div
             key={tutor.id}
             initial={{ y: 100, opacity: 0 }}
@@ -271,7 +272,7 @@ const OneOnOne = () => {
 
                 <div>
                   <Link
-                    to={`tutordetails/${tutor.id}`}
+                    to={`tutordetails/${tutor.teacher_id}`}
                     className="p-2 rounded-md text-xs md:text-sm xl:text-lg font-semibold text-white bg-primary"
                   >
                     {t("View Profile")}

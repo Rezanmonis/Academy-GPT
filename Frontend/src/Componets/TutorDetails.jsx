@@ -8,6 +8,7 @@ import flag from "../assets/Image/UK Flag.png";
 import { IoLocationOutline } from "react-icons/io5";
 import whatapp from "../assets/Image/whatsapp.png";
 import { useTranslation } from "react-i18next";
+import SlotCalendarStudent from "./SlotCalendarStudent";
 
 const TutorDetails = () => {
   const { id } = useParams(); // Fetch ID from route params
@@ -28,23 +29,8 @@ const TutorDetails = () => {
         const token =
           localStorage.getItem("token") || sessionStorage.getItem("token");
 
-        const response = await fetch(`https://academy-gpt-backend.onrender.com/teachers/${id}/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || "Failed to fetch tutor details.");
-        }
-
-        const tutorData = await response.json();
-
-        // Fetch user data to enrich tutor information
-        const userResponse = await fetch(
-          `https://academy-gpt-backend.onrender.com/users/${tutorData?.data?.user}/`,
+        const response = await fetch(
+          `https://academy-gpt-backend.onrender.com/teachers/tutors-list?id=${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -53,20 +39,43 @@ const TutorDetails = () => {
           }
         );
 
-        if (!userResponse.ok) {
-          throw new Error("Failed to fetch user details.");
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || "Failed to fetch tutor details.");
         }
+        const data = await response.json();
+        console.log("response", data)
+        
+        const tutorData = data.data[0];
+        // console.log(tutorData.results[0].id,  "tutorData")
+        //         // Fetch user data to enrich tutor information
+        //         const userResponse = await fetch(
+        //           // `https://academy-gpt-backend.onrender.com/users/${tutorData?.results[0]?.user}`,
+        //           `https://academy-gpt-backend.onrender.com/users/me`,
+        //           {
+        //             headers: {
+        //               Authorization: `Bearer ${token}`,
+        //               "Content-Type": "application/json",
+        //             },
+        //           }
+        //         );
 
-        const userData = await userResponse.json();
+        //         if (!userResponse.ok) {
+        //           throw new Error("Failed to fetch user details.");
+        //         }
+
+        // const userData = await userResponse.json();
 
         // Combine tutor and user data
+        console.log("tutorData", tutorData);
         setTutor({
           ...tutorData.data,
-          username: `${userData.data.first_name || "N/A"} ${
-            userData.data.last_name || ""
+          username: `${tutorData.first_name || "N/A"} ${
+            tutorData.last_name || ""
           }`.trim(),
-          profile_picture: userData.data.profile_picture || oneimg,
-          languages: userData.data.languages || [],
+          profile_picture: tutorData.profile_picture || oneimg,
+          languages: tutorData.languages || [],
+          teacher_id: tutorData.teacher_id || "",
         });
       } catch (error) {
         setError(error.message);
@@ -80,7 +89,7 @@ const TutorDetails = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-
+console.log("tu", tutor)
   return (
     <>
       <div className="px-2 py-2">
@@ -138,7 +147,7 @@ const TutorDetails = () => {
             </div>
             <div>
               <p className="text-xs xl:text-base font-normal w-60 md:w-full">
-               {t("Your First Lesson is Backed by our Good Fit Guarantee")}
+                {t("Your First Lesson is Backed by our Good Fit Guarantee")}
               </p>
               <div className="md:flex py-2 md:justify-between">
                 <h2 className="text-lg md:text-xl xl:text-2xl md:my-auto font-bold">
@@ -166,9 +175,10 @@ const TutorDetails = () => {
                     </h2>
                   </div>
                   <p className="text-lg md:text-xl xl:text-3xl font-medium">
-                    <button className="p-1 px-2 text-xs md:text-base xl:text-xl font-semibold rounded-md bg-primary text-white">
+                    {/* <button className="p-1 px-2 text-xs md:text-base xl:text-xl font-semibold rounded-md bg-primary text-white">
                       {t("Book Lesson")}
-                    </button>
+                    </button> */}
+                    <SlotCalendarStudent tutorId={tutor.teacher_id}/>
                   </p>
                 </div>
                 <div>
