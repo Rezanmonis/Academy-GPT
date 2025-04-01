@@ -357,7 +357,7 @@ const LeanerNavbar = () => {
           />
           <IoSearch className="my-auto mt-1" size={25} />
           <button onClick={toggleDrawer}>
-            <MenuOutlined className="text-white hidden text-2xl" />
+            <MenuOutlined className="text-white  text-2xl" />
           </button>
         </div>
       </div>
