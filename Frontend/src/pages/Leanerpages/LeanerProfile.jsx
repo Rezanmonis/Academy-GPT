@@ -147,7 +147,7 @@ const LeanerProfile = () => {
             <div>
               <h2 className="text-base font-semibold md:text-lg xl:text-xl">Skill</h2>
               <p className="text-sm lg:text-base xl:text-lg text-black/80 font-normal">
-                {user.skill?.join(", ") || "No skills listed."}
+                {user.skill  || "No skills listed."}
               </p>
             </div>
             <div>

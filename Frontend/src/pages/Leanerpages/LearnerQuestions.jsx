@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { IoIosSearch } from "react-icons/io";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const LearnerQuestions = () => {
   const [queries, setQueries] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   // Get student_id from Redux
   const { student_id } = useSelector((state) => state.user.user || {});
@@ -88,7 +90,7 @@ const LearnerQuestions = () => {
               type="search"
               name="searchQuestion"
               id="searchQuestion"
-              placeholder="Search Questions ?"
+              placeholder={t("Search Questions ?")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -146,7 +148,7 @@ const LearnerQuestions = () => {
         {filteredQueries.length === 0 && !loading && (
           <div className="col-span-4 lg:col-span-8 mt-5 text-center">
             <p className="text-lg font-semibold text-black/50">
-              No questions found.
+            {t("No questions found.")}
             </p>
           </div>
         )}
