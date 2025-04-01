@@ -568,6 +568,7 @@ function AskQuestion() {
   const [userLanguage, setUserLanguage] = useState("en");
   const [isMobileDevice, setIsMobileDevice] = useState(false);
   const [loading, setLoading] = useState(false); 
+  const { t } = useTranslation();
 
   const chatEndRef = useRef(null);
   const webcamRef = useRef(null);
