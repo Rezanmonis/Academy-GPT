@@ -41,7 +41,7 @@ const LeanerProfile = () => {
 
   return (
     <>
-      <div className="font-urbanist">
+      <div className="font-urbanist  py-5">
         <div className="px-5 space-y-5 md:space-y-0 md:space-x-5 md:flex">
           {/* Left Profile Section */}
           <div className="border-2 p-3 drop-shadow-md rounded-lg h-fit md:w-4/6">
