@@ -351,8 +351,8 @@ const LeanerNavbar = () => {
             src={user.profile_picture || person}
             alt="User"
             onClick={handleProfileClick}
-            className={`w-2 h-2 my-auto object-cover rounded-full ${
-              activeComponent === "border-primary " ? "border-2 border-primary" : ""
+            className={`w-9 h-9  my-auto object-cover bg-white  rounded-full ${
+              activeComponent === "profile  " ? "border-2  border-primary" : ""
             }`}
           />
           <IoSearch className="my-auto mt-1" size={25} />

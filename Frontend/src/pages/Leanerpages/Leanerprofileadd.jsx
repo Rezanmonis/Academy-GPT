@@ -163,12 +163,12 @@ const LeanerProfileAdd = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
       <div className="bg-white p-6 rounded-lg w-full">
-        <div className="flex flex-col items-center space-y-2">
-          <label htmlFor="profileUpload" className="cursor-pointer">
+        <div className="flex flex-col mx-auto items-center space-y-2">
+          <label htmlFor="profileUpload" className="cursor-pointer ">
             <img
               src={profilePreview}
               alt="Profile"
-              className="w-20 h-20 rounded-full border border-gray-300 object-cover"
+              className="w-20 h-20 rounded-full mx-auto border border-gray-300 object-cover"
             />
             <div className="text-orange-500 text-sm mt-2">
               {t("Click to change photo")} (Optional)
@@ -209,6 +209,34 @@ const LeanerProfileAdd = () => {
             onChange={handleChange}
             className="p-2 border border-gray-300 rounded-md"
           />
+
+          <input
+            type="text"
+            name="basic_informatio"
+            placeholder={t("Basic Information")}
+            value={formData.basic_information}
+            onChange={handleChange}
+            className="p-2 border border-gray-300 rounded-md"
+          />
+
+         <input
+            type="text"
+            name="education"
+            placeholder={t("Education")}
+            value={formData.education}
+            onChange={handleChange}
+            className="p-2 border border-gray-300 rounded-md"
+          />
+
+          <input
+            type="text"
+            name="goal"
+            placeholder={t("Goal")}
+            value={formData.goal}
+            onChange={handleChange}
+            className="p-2 border border-gray-300 rounded-md"
+          />
+
           <input
             type="email"
             name="email"
@@ -234,7 +262,7 @@ const LeanerProfileAdd = () => {
           />
           <CreatableSelect
             isMulti
-            className="w-full rounded-md col-span-2"
+            className="rounded-md "
             options={languages}
             value={selectedLanguages}
             onChange={handleLanguageChange}
