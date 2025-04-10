@@ -36,7 +36,7 @@
 // import Aboutpage from "./pages/Aboutpage";
 
 // function App() {
-//   const token = localStorage.getItem("token"); 
+//   const token = localStorage.getItem("token");
 //   return (
 //     <Router>
 //       <Routes>
@@ -156,12 +156,7 @@
 
 // export default App;
 
-
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
 import Aboutus from "./Componets/Aboutus";
@@ -194,14 +189,11 @@ import Aboutpage from "./pages/Aboutpage";
 import TutorProfile from "./pages/Tutorpages/TutorProfile";
 import TutorAddProfile from "./pages/Tutorpages/TutorAddProfile";
 import TutorDashboard from "./pages/Tutorpages/TutorDashboard";
+import TutorListing from "./pages/Leanerpages/TutorListing";
 // import ForgotPassword from "./Componets/";
 import TutorLeanerQuestion from "./pages/Tutorpages/TutorLeanerQuestion";
 
 function App() {
-  
-
-
-
   return (
     <Provider store={store}>
       <Router>
@@ -218,16 +210,17 @@ function App() {
           <Route path="/applynow" element={<ApplyNowpage />} />
 
           {/* Protected routes for Learner */}
+          <Route path="/tutorlisting" element={<TutorListing />} />
 
           <Route path="/leanernavbar" element={<LeanerNavbar />}>
             <Route index element={<LeanerDashboard />} />
             <Route path="dashboard" element={<LeanerDashboard />} />
             <Route path="dashboard/paymentmethod" element={<Paymentmethod />} />
-            <Route path="oneonone" element={<OneOnOne />} />
             <Route
               path="oneonone/tutordetails/:id"
               element={<TutorDetails />}
             />
+            <Route path="oneonone" element={<OneOnOne />} />
             <Route path="group4" element={<Group4 />} />
             <Route path="group4/tutordetails/:id" element={<TutorDetails />} />
             <Route path="group4plus" element={<Group4plus />} />
@@ -254,7 +247,7 @@ function App() {
             <Route index element={<TutorDashboard />} />
             <Route path="dashboard" element={<TutorDashboard />} />
             <Route path="dashboard/paymentmethod" element={<Paymentmethod />} />
-           
+
             <Route
               path="tutorleanerquestion"
               element={<TutorLeanerQuestion />}
@@ -280,4 +273,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
