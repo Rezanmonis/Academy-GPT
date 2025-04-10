@@ -10,8 +10,8 @@ import { useTranslation } from "react-i18next";
 import apiService from "../../services/apiServices";
 import { apiNonAuthService } from "../../services/apiServices";
 import { toast } from "react-toastify";
-
-const OneOnOne = () => {
+import Navbar from "../../Componets/Navbar";
+const TutorListing = () => {
   const [tutors, setTutors] = useState([]);
   const [filteredTutors, setFilteredTutors] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
@@ -72,10 +72,14 @@ const OneOnOne = () => {
       </div>
     );
   }
-
+const handleNavigation =()=>{
+    toast.warn("To view profile or book lesson, you have to login")
+}
   return (
     <>
+      <Navbar />
       <div className="grid grid-cols-5  px-3">
+
         <div className="flex justify-between py-3 col-span-5 w-full">
           <motion.div
             className="my-auto"
@@ -189,9 +193,9 @@ const OneOnOne = () => {
                   </div>
                 </div>
 
-                <div>
+                <div onClick={handleNavigation}>
                   <Link
-                    to={`tutordetails/${tutor.teacher_id}`}
+                    to={`/loginpage`}
                     className="p-2 rounded-md text-xs md:text-sm xl:text-lg font-semibold text-white bg-primary"
                   >
                     {t("View Profile")}
@@ -245,4 +249,4 @@ const OneOnOne = () => {
   );
 };
 
-export default OneOnOne;
+export default TutorListing;
