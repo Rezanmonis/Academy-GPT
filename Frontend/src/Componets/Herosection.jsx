@@ -37,7 +37,7 @@ const Herosection = () => {
  const handleSearch = () => {
    if (searchQuery.trim()) {
      navigate(
-       `/leanernavbar/oneonone?subject=${encodeURIComponent(
+       `/tutorlisting?subject=${encodeURIComponent(
          searchQuery.trim()
        )}`
      );
@@ -48,7 +48,12 @@ const Herosection = () => {
 
  const handleCourseClick = (course) => {
    setSearchQuery(course);
-   setShowSuggestions(false); // Close the dropdown after selection
+   setShowSuggestions(false); 
+   navigate(
+    `/tutorlisting?subject=${encodeURIComponent(
+      course.trim()
+    )}`
+  );// Close the dropdown after selection
  };
 
   return (
