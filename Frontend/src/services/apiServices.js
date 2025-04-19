@@ -13,13 +13,15 @@ const apiService = async ({
   params = null,
   headers = {},
 }) => {
-  // Retrieve authentication token
   const authToken = sessionStorage.getItem("token");
 
   if (!authToken) {
     toast.error("Authentication token missing!");
     return { error: "No token available" };
   }
+
+  // Detect if FormData is used
+  const isFormData = data instanceof FormData;
 
   try {
     const response = await axios({
@@ -29,12 +31,12 @@ const apiService = async ({
       params,
       headers: {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-        ...headers, // Merge any custom headers
+        ...(isFormData ? {} : { "Content-Type": "application/json" }),
+        ...headers,
       },
     });
 
-    return response.data; // Return successful response data
+    return response.data;
   } catch (error) {
     console.error("API Error:", error);
 
@@ -54,12 +56,16 @@ const apiService = async ({
       } else if (status >= 500) {
         errorMessage = "Server error. Please try again later.";
       }
+
+      toast.error(data?.message || errorMessage);
+    } else {
+      toast.error(errorMessage);
     }
 
-    toast.error(error?.response?.data?.message);
     return { error: errorMessage };
   }
 };
+
 
 export const apiNonAuthService = async ({
   method = "GET",
