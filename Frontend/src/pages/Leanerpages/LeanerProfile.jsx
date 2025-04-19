@@ -41,7 +41,7 @@ const LeanerProfile = () => {
 
   return (
     <>
-      <div className="font-urbanist">
+      <div className="font-urbanist  py-5">
         <div className="px-5 space-y-5 md:space-y-0 md:space-x-5 md:flex">
           {/* Left Profile Section */}
           <div className="border-2 p-3 drop-shadow-md rounded-lg h-fit md:w-4/6">
@@ -147,7 +147,7 @@ const LeanerProfile = () => {
             <div>
               <h2 className="text-base font-semibold md:text-lg xl:text-xl">Skill</h2>
               <p className="text-sm lg:text-base xl:text-lg text-black/80 font-normal">
-                {user.skill?.join(", ") || "No skills listed."}
+                {user.skill  || "No skills listed."}
               </p>
             </div>
             <div>

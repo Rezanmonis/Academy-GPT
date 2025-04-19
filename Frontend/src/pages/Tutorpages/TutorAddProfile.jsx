@@ -537,7 +537,7 @@ const TutorAddProfile = () => {
         <div className="flex justify-center">
           <button
             type="submit"
-            className="p-2 text-white bg-primary w-full rounded-md mt-3 w-[60%]" 
+            className="p-2 text-white bg-primary rounded-md mt-3 w-[60%]" 
           >
             Submit
           </button>

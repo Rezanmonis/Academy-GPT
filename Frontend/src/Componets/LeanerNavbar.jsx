@@ -220,6 +220,7 @@
 
 import { useState, useEffect } from "react";
 import { MenuOutlined } from "@ant-design/icons";
+// import logo from "../assets/Image/Logo.png";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserData, logout } from "../features/userSlice";
 import { CgClose } from "react-icons/cg";
@@ -350,13 +351,13 @@ const LeanerNavbar = () => {
             src={user.profile_picture || person}
             alt="User"
             onClick={handleProfileClick}
-            className={`w-9 h-9 my-auto rounded-full ${
-              activeComponent === "profile" ? "border-2 border-primary" : ""
+            className={`w-9 h-9  my-auto object-cover bg-white  rounded-full ${
+              activeComponent === "profile  " ? "border-2  border-primary" : ""
             }`}
           />
           <IoSearch className="my-auto mt-1" size={25} />
           <button onClick={toggleDrawer}>
-            <MenuOutlined className="text-white text-2xl" />
+            <MenuOutlined className="text-white  text-2xl" />
           </button>
         </div>
       </div>
@@ -384,7 +385,7 @@ const LeanerNavbar = () => {
                   key={item.key}
                   className={`cursor-pointer flex list-inside text-white bg-[#212121] px-4 p-1 ${
                     activeComponent === item.key
-                      ? "bg-primary text-white relative"
+                      ? "bg-primary p-2 text-white relative"
                       : ""
                   } hover:bg-primary rounded-md transition-all`}
                   onClick={() => setActiveComponent(item.key)}>
@@ -431,7 +432,7 @@ const LeanerNavbar = () => {
               alt="User"
               onClick={handleProfileClick}
               className={`w-9 h-9 my-auto rounded-full ${
-                activeComponent === "profile" ? "border-2 border-primary" : ""
+                activeComponent === "p-2" ? "border-2 p-2 border-primary" : ""
               }`}
             />
             <div>
