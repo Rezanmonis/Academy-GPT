@@ -11,6 +11,7 @@ import apiService from "../../services/apiServices";
 import { apiNonAuthService } from "../../services/apiServices";
 import { toast } from "react-toastify";
 import Navbar from "../../Componets/Navbar";
+
 const TutorListing = () => {
   const [tutors, setTutors] = useState([]);
   const [filteredTutors, setFilteredTutors] = useState([]);
@@ -72,14 +73,14 @@ const TutorListing = () => {
       </div>
     );
   }
-const handleNavigation =()=>{
-    toast.warn("To view profile or book lesson, you have to login")
-}
+  const handleNavigation = () => {
+    toast.warn("To view profile or book lesson, you have to login");
+  };
+  console.log("tutors", tutors);
   return (
     <>
       <Navbar />
       <div className="grid grid-cols-5  px-3">
-
         <div className="flex justify-between py-3 col-span-5 w-full">
           <motion.div
             className="my-auto"
@@ -119,21 +120,24 @@ const handleNavigation =()=>{
               <div className="flex md:block relative md:static space-x-2 md:space-x-0 lg:space-y-1 bg-[#F6F6F6] py-2 pb-3">
                 <img
                   className="w-20 h-20 lg:size-24 xl:size-36 bg-[#F6F6F6] my-auto md:mx-auto rounded-full"
-                  src={tutor.profile_picture}
+                  src={
+                    `https://academy-gpt-backend.onrender.com${tutor?.profile_picture}` ||
+                    `${placeholderImg}`
+                  }
                   alt={tutor.username}
                 />
                 <div className="flex bg-[#F6F6F6]">
                   <div className="space-y-1 lg:space-y-2 xl:mx-auto">
-                    <h2 className="text-lg md:text-xl xl:text-2xl font-semibold">
+                    <h2 className="text-lg md:text-xl xl:text-2xl font-semibold text-center">
                       {tutor?.username || "N/A"}
                     </h2>
-                    <p className="font-semibold text-[13px] md:text-[15px] xl:text-base">
+                    <p className="font-semibold text-[13px] md:text-[15px] xl:text-base text-center">
                       5.0
                       <span className="font-normal pl-1 text-[10px] md:text-[11px] xl:text-xs">
                         ({tutor.rating})
                       </span>
                     </p>
-                    <div className="flex text-primary md:space-x-1">
+                    <div className="flex text-primary md:space-x-1 justify-center">
                       {[...Array(5)].map((_, i) => (
                         <IoMdStar key={i} className="md:size-5 xl:size-7" />
                       ))}
@@ -164,14 +168,15 @@ const handleNavigation =()=>{
               <div className="py-2 space-y-1 bg-white">
                 <div className="flex justify-between md:pr-14">
                   <h2 className="text-[19px] md:text-xl xl:text-4xl font-semibold">
-                    {tutor.username || "N/A"}
+                    {/* {tutor.username || "N/A"} */}
+                    {tutor.first_name} {tutor.last_name}
                   </h2>
                   <p className="text-lg md:text-xl xl:text-3xl font-medium">
                     ${tutor.hourly_rate || "N/A"}
                   </p>
                 </div>
                 <p className="text-primary text-sm md:text-base xl:text-2xl">
-                  {tutor?.skill || t("No skills listed")}
+                  Skills: {tutor?.skill || t("No skills listed")}
                 </p>
                 <p className="text-primary text-sm md:text-base xl:text-2xl">
                   {t("Credentialed multiple subject teacher")}
@@ -188,7 +193,9 @@ const handleNavigation =()=>{
                   </p>
                   <div className="pl-10">
                     <button className="hidden md:inline p-1 px-2 text-base xl:text-lg font-medium rounded-lg bg-[#60AD56] text-white">
-                      {tutor.subject || "N/A"}
+                      {/* {tutor.subject || "N/A"} */}
+                      {tutor?.teacher_details?.lesson_subject || "N/A"}
+
                     </button>
                   </div>
                 </div>
