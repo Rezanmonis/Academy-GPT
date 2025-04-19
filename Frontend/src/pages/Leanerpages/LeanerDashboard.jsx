@@ -74,11 +74,12 @@ const LeanerDashboard = () => {
 
   if (error)
     return <div className="text-red-500 text-center">{error.message}</div>;
-  console.log("user", userData);
+  console.log("user", bookingDetails);
 
   useEffect(() => {
     getSlots();
   }, []);
+
   return (
     <div className="font-urbanist lg:flex gap-x-8 px-2 lg:px-5 z-20">
       <div className="lg:w-2/6">
@@ -169,11 +170,17 @@ const LeanerDashboard = () => {
                           "No subject available"}
                       </p>
                     </div>
-                    <img
-                      className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 my-auto"
-                      src={whatapp}
-                      alt="WhatsApp"
-                    />
+                    <a
+                      href={`https://wa.me/${student?.availability_display?.teacher_contact}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 my-auto"
+                        src={whatapp}
+                        alt="WhatsApp"
+                      />
+                    </a>
                   </div>
                 </div>
                 <div className="space-y-1">
