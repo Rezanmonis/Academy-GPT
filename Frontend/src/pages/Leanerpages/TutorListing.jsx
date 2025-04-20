@@ -172,7 +172,7 @@ const TutorListing = () => {
                     {tutor.first_name} {tutor.last_name}
                   </h2>
                   <p className="text-lg md:text-xl xl:text-3xl font-medium">
-                    ${tutor.hourly_rate || "N/A"}
+                  ${tutor?.teacher_details?.hourly_rate || "N/A"}
                   </p>
                 </div>
                 <p className="text-primary text-sm md:text-base xl:text-2xl">
@@ -182,7 +182,7 @@ const TutorListing = () => {
                   {t("Credentialed multiple subject teacher")}
                 </p>
                 <p className="text-[9.73px] md:text-[13px] xl:text-lg text-black/60 font-normal">
-                  {tutor.description || "No description provided."}
+                  {tutor?.teacher_details?.description || "No description provided."}
                 </p>
               </div>
 
