@@ -343,6 +343,7 @@ const TutorAddProfile = () => {
         "lesson_subject",
         "policy",
         "phone",
+        "description",
       ];
       const teacherDetails = {};
 
@@ -421,6 +422,7 @@ const TutorAddProfile = () => {
           lesson_subject: tData.lesson_subject || "",
           IBAN: tData.IBAN || "",
           policy: tData.policy || "",
+          description: tData.description || "",
         });
       }
     };
@@ -482,7 +484,7 @@ const TutorAddProfile = () => {
           {[
             ["first_name", "First Name"],
             ["last_name", "Last Name"],
-            // ["basic_info", "Basic Information"],
+            ["description", "Description"],
             ["skill", "Skill"],
             ["education", "Education"],
             ["work_experience", "Work Experience"],
@@ -537,7 +539,7 @@ const TutorAddProfile = () => {
         <div className="flex justify-center">
           <button
             type="submit"
-            className="p-2 text-white bg-primary rounded-md mt-3 w-[60%]" 
+            className="p-2 text-white bg-primary rounded-md mt-3 w-[60%]"
           >
             Submit
           </button>

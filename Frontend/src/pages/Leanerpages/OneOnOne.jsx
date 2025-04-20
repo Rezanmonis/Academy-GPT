@@ -167,24 +167,24 @@ const OneOnOne = () => {
 
                   </h2>
                   <p className="text-lg md:text-xl xl:text-3xl font-medium">
-                    ${tutor.hourly_rate || "N/A"}
+                    ${tutor?.teacher_details?.hourly_rate || "N/A"}
                   </p>
                 </div>
                 <p className="text-primary text-sm md:text-base xl:text-2xl">
-                  {tutor?.skill || t("No skills listed")}
+                  Skills: {tutor?.skill || t("No skills listed")}
                 </p>
                 <p className="text-primary text-sm md:text-base xl:text-2xl">
                   {t("Credentialed multiple subject teacher")}
                 </p>
                 <p className="text-[9.73px] md:text-[13px] xl:text-lg text-black/60 font-normal">
-                  {tutor.description || "No description provided."}
+                  {tutor?.teacher_details?.description || "No description provided."}
                 </p>
               </div>
 
               <div className="flex justify-between py-2 px-4">
                 <div className="flex space-x-1 my-auto">
                   <p className="text-[10px] md:text-xs xl:text-sm font-semibold my-auto">
-                    {tutor.language || t("Language not specified")}
+                    {tutor?.teacher_details?.language || t("Language not specified")}
                   </p>
                   <div className="pl-10">
                     <button className="hidden md:inline p-1 px-2 text-base xl:text-lg font-medium rounded-lg bg-[#60AD56] text-white">
