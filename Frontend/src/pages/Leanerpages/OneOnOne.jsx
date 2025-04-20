@@ -150,9 +150,9 @@ const OneOnOne = () => {
                     <button className="md:hidden absolute p-1 -bottom-12 text-base font-medium px-2 right-0 bg-[#056FD2] inline rounded-l-lg text-white">
                       {t("Certified")}
                     </button>
-                    <button className="md:hidden absolute p-1 -bottom-[95px] text-base font-medium right-0 text-right inline rounded-l-lg bg-[#60AD56] text-white">
-                      {tutor.subject || "N/A"}
-                    </button>
+                    {/* <button className="md:hidden absolute p-1 -bottom-[95px] text-base font-medium right-0 text-right inline rounded-l-lg bg-[#60AD56] text-white">
+                    {tutor?.teacher_details?.lesson_subject || "N/A"}
+                    </button> */}
                   </div>
                 </div>
               </div>
@@ -183,11 +183,11 @@ const OneOnOne = () => {
 
               <div className="flex justify-between py-2 px-4">
                 <div className="flex space-x-1 my-auto">
-                  <p className="text-[10px] md:text-xs xl:text-sm font-semibold my-auto">
+                  <p className="text-[14px] md:text-xs xl:text-sm font-semibold my-auto">
                     {tutor?.teacher_details?.language || t("Language not specified")}
                   </p>
-                  <div className="pl-10">
-                    <button className="hidden md:inline p-1 px-2 text-base xl:text-lg font-medium rounded-lg bg-[#60AD56] text-white">
+                  <div className="pl-6">
+                    <button className=" md:inline p-1 px-2 text-base xl:text-lg font-medium rounded-lg bg-[#60AD56] text-white">
                       {tutor?.teacher_details?.lesson_subject || "N/A"}
                     </button>
                   </div>
