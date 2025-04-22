@@ -131,12 +131,12 @@ const TutorListing = () => {
                     {/* <h2 className="text-lg md:text-xl xl:text-2xl font-semibold text-center">
                       {tutor?.username || "N/A"}
                     </h2> */}
-                    <p className="font-semibold text-[13px] md:text-[15px] xl:text-base text-center">
+                    {/* <p className="font-semibold text-[13px] md:text-[15px] xl:text-base text-center">
                       5.0
                       <span className="font-normal pl-1 text-[10px] md:text-[11px] xl:text-xs">
                         ({tutor.rating})
                       </span>
-                    </p>
+                    </p> */}
                     <div className="flex text-primary md:space-x-1 justify-center">
                       {[...Array(5)].map((_, i) => (
                         <IoMdStar key={i} className="md:size-5 xl:size-7" />
@@ -171,39 +171,50 @@ const TutorListing = () => {
                     {/* {tutor.username || "N/A"} */}
                     {tutor.first_name} {tutor.last_name}
                   </h2>
-                  <p className="text-lg md:text-xl xl:text-3xl font-medium">
-                  ${tutor?.teacher_details?.hourly_rate || "N/A"}
+                  <p className="text-[22px] md:text-[24px] xl:text-3xl font-bold">
+                    ${tutor?.teacher_details?.hourly_rate || "N/A"}
                   </p>
                 </div>
                 <p className="text-primary text-sm md:text-base xl:text-2xl">
                   Skills: {tutor?.skill || t("No skills listed")}
                 </p>
-                <p className="text-primary text-sm md:text-base xl:text-2xl">
+                {/* <p className="text-primary text-sm md:text-base xl:text-2xl">
                   {t("Credentialed multiple subject teacher")}
-                </p>
+                </p> */}
                 <p className="text-[9.73px] md:text-[13px] xl:text-lg text-black/60 font-normal">
-                  {tutor?.teacher_details?.description || "No description provided."}
+                  {tutor?.teacher_details?.description ||
+                    "No description provided."}
                 </p>
               </div>
 
               <div className="flex justify-between py-2">
                 <div className="flex space-x-1 my-auto">
-                  <p className="text-[10px] md:text-xs xl:text-sm font-semibold my-auto">
-                    {tutor.language || t("Language not specified")}
+                  <p className="text-[12px] md:text-xs xl:text-sm font-semibold my-auto">
+                    <p className="text-sm text-gray-700">
+                      {tutor?.languages
+                        ? tutor.languages
+                            .split(",")
+                            .map(
+                              (langCode) =>
+                                initialLanguages.find(
+                                  (l) => l.value === langCode
+                                )?.label || langCode
+                            )
+                            .join(", ")
+                        : t("Language not specified")}
+                    </p>
                   </p>
-                  <div className="pl-10">
-                    <button className="hidden md:inline p-1 px-2 text-base xl:text-lg font-medium rounded-lg bg-[#60AD56] text-white">
-                      {/* {tutor.subject || "N/A"} */}
+                  <div className="pl-2">
+                    <button className=" md:inline p-1 px-1 text-[14px] xl:text-lg font-medium rounded-lg bg-[#60AD56] text-white">
                       {tutor?.teacher_details?.lesson_subject || "N/A"}
-
                     </button>
                   </div>
                 </div>
 
-                <div onClick={handleNavigation}>
+                <div className="w-[80px]">
                   <Link
-                    to={`/loginpage`}
-                    className="p-2 rounded-md text-xs md:text-sm xl:text-lg font-semibold text-white bg-primary"
+                    to={`tutordetails/${tutor.teacher_id}`}
+                    className="p-2 rounded-md text-xs md:text-sm xl:text-lg font-semibold text-white bg-primary "
                   >
                     {t("View Profile")}
                   </Link>
