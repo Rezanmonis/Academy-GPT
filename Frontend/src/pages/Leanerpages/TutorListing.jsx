@@ -131,12 +131,12 @@ const TutorListing = () => {
                     {/* <h2 className="text-lg md:text-xl xl:text-2xl font-semibold text-center">
                       {tutor?.username || "N/A"}
                     </h2> */}
-                    <p className="font-semibold text-[13px] md:text-[15px] xl:text-base text-center">
+                    {/* <p className="font-semibold text-[13px] md:text-[15px] xl:text-base text-center">
                       5.0
                       <span className="font-normal pl-1 text-[10px] md:text-[11px] xl:text-xs">
                         ({tutor.rating})
                       </span>
-                    </p>
+                    </p> */}
                     <div className="flex text-primary md:space-x-1 justify-center">
                       {[...Array(5)].map((_, i) => (
                         <IoMdStar key={i} className="md:size-5 xl:size-7" />
@@ -171,16 +171,16 @@ const TutorListing = () => {
                     {/* {tutor.username || "N/A"} */}
                     {tutor.first_name} {tutor.last_name}
                   </h2>
-                  <p className="text-lg md:text-xl xl:text-3xl font-medium">
+                  <p className="text-lg md:text-xl xl:text-3xl font-bold">
                   ${tutor?.teacher_details?.hourly_rate || "N/A"}
                   </p>
                 </div>
                 <p className="text-primary text-sm md:text-base xl:text-2xl">
                   Skills: {tutor?.skill || t("No skills listed")}
                 </p>
-                <p className="text-primary text-sm md:text-base xl:text-2xl">
+                {/* <p className="text-primary text-sm md:text-base xl:text-2xl">
                   {t("Credentialed multiple subject teacher")}
-                </p>
+                </p> */}
                 <p className="text-[9.73px] md:text-[13px] xl:text-lg text-black/60 font-normal">
                   {tutor?.teacher_details?.description || "No description provided."}
                 </p>

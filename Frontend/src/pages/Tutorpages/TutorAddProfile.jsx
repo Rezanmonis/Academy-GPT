@@ -1,291 +1,3 @@
-// import { MdCameraAlt } from "react-icons/md";
-// import CreatableSelect from "react-select/creatable";
-// import { useState } from "react";
-// import PropTypes from "prop-types";
-// import { useNavigate } from "react-router-dom";
-// import { UploadCloud } from "lucide-react";
-// import { Camera } from "lucide-react";
-
-// const initialLanguages = [
-//   {
-//     value: "en",
-//     label: "English",
-//     flag: "https://flagcdn.com/us.svg",
-//   },
-//   {
-//     value: "es",
-//     label: "Spanish",
-//     flag: "https://flagcdn.com/es.svg",
-//   },
-//   {
-//     value: "fr",
-//     label: "French",
-//     flag: "https://flagcdn.com/fr.svg",
-//   },
-// ];
-
-// const TutorAddProfile = () => {
-//   const navigate = useNavigate();
-
-//   const [selectedLanguages, setSelectedLanguages] = useState([
-//     initialLanguages[0],
-//   ]);
-//   const [languages, setLanguages] = useState(initialLanguages);
-//   const [image, setImage] = useState(null);
-//   const [preview, setPreview] = useState(null);
-//   const [uploading, setUploading] = useState(false);
-//   const [message, setMessage] = useState("");
-//   const customOption = (props) => (
-//     <div
-//       {...props.innerProps}
-//       className="flex items-center my-auto p-2 cursor-pointer "
-//     >
-//       <img src={props.data.flag} alt="" className="w-5 h-5 mr-2 rounded-md" />
-//       <span>{props.data.label}</span>
-//     </div>
-//   );
-
-//   customOption.propTypes = {
-//     innerProps: PropTypes.object.isRequired,
-//     data: PropTypes.shape({
-//       flag: PropTypes.string.isRequired,
-//       label: PropTypes.string.isRequired,
-//     }).isRequired,
-//   };
-
-//   const customSingleValue = (props) => (
-//     <div className="flex -mt-6 ml-2 border-[1px]  my-auto items-center">
-//       <img src={props.data.flag} alt="" className="w-5 h-5 mr-2 rounded-md" />
-//       <span>{props.data.label}</span>
-//     </div>
-//   );
-
-//   customSingleValue.propTypes = {
-//     data: PropTypes.shape({
-//       flag: PropTypes.string.isRequired,
-//       label: PropTypes.string.isRequired,
-//     }).isRequired,
-//   };
-
-//   const handleLanguageChange = (newValue) => {
-//     setSelectedLanguages(newValue);
-//   };
-
-//   const handleLanguageCreate = (inputValue) => {
-//     const newLanguage = { value: inputValue.toLowerCase(), label: inputValue };
-//     setLanguages([...languages, newLanguage]);
-//     setSelectedLanguages([...selectedLanguages, newLanguage]);
-//   };
-
-//   const handleProfileClick = async () => {
-//     // navigate("/tutornavbar/paymentmethod");
-
-//     e.preventDefault();
-//     if (!image) return alert("Please select an image");
-
-//     const formData = new FormData();
-//     formData.append("image", image);
-
-//     try {
-//       setUploading(true);
-//       const res = await axios.post(
-//         "https://your-api-endpoint.com/upload",
-//         formData,
-//         {
-//           headers: {
-//             "Content-Type": "multipart/form-data",
-//           },
-//         }
-//       );
-//       setMessage("Upload successful!");
-//       console.log(res.data);
-//     } catch (error) {
-//       console.error(error);
-//       setMessage("Upload failed.");
-//     } finally {
-//       setUploading(false);
-//     }
-//   };
-//   const handleImageChange = (e) => {
-//     const file = e.target.files[0];
-//     setImage(file);
-
-//     // Preview image
-//     const reader = new FileReader();
-//     reader.onloadend = () => {
-//       setPreview(reader.result);
-//     };
-//     reader.readAsDataURL(file);
-//   };
-// console.log("imageegege===>",image)
-//   return (
-//     <>
-//       <div>
-//         <div className="px-10 pt-10 lg:pt-0 xl:px-20 my-auto space-y-3 xl:space-y-5">
-//           <div className="space-y-2">
-//             {/* Profile Image with camera overlay */}
-//             <div className="relative w-40 h-40">
-//               <img
-//                 src={preview || "https://via.placeholder.com/150"}
-//                 alt="Profile"
-//                 className="w-full h-full object-cover rounded-full border-2 border-gray-300"
-//               />
-//               <label className="absolute bottom-2 right-2 bg-white shadow p-2 rounded-full cursor-pointer hover:bg-gray-100 transition">
-//                 <Camera className="w-5 h-5 text-gray-700" />
-//                 <input
-//                   type="file"
-//                   accept="image/*"
-//                   onChange={handleImageChange}
-//                   className="hidden"
-//                 />
-//               </label>
-//             </div>
-
-//             {/* Upload Button */}
-//             {image && (
-//               <button
-//                 onClick={handleSubmit}
-//                 disabled={uploading}
-//                 className="px-6 py-2 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition disabled:opacity-50"
-//               >
-//                 {uploading ? "Uploading..." : "Upload Profile Picture"}
-//               </button>
-//             )}
-//           </div>
-
-//           <div className="md:flex space-y-3 md:space-y-0 md:space-x-3 xl:space-x-5">
-//             <input
-//               type="text"
-//               placeholder="Name"
-//               className="w-full p-2 border-[1px] border-black/70 rounded-md focus:outline-primary"
-//             />
-//             <input
-//               type="text"
-//               name="basicinformation"
-//               id="basicinformation"
-//               placeholder="Basic Information"
-//               className="w-full p-2 border-[1px] border-black/70 rounded-md focus:outline-primary"
-//             />
-//           </div>
-
-//           <div className="md:flex space-y-3 md:space-y-0 md:space-x-3 xl:space-x-5">
-//             <input
-//               type="text"
-//               placeholder="Skill"
-//               className="w-full p-2 border-[1px] border-black/70 rounded-md focus:outline-primary"
-//             />
-//             <input
-//               type="text"
-//               name="Education"
-//               id="Education"
-//               placeholder="Education"
-//               className="w-full p-2 border-[1px] border-black/70 rounded-md focus:outline-primary"
-//             />
-//           </div>
-
-//           <div className="md:flex space-y-3 md:space-y-0 md:space-x-3 xl:space-x-5">
-//             <input
-//               type="text"
-//               placeholder="Work Experience"
-//               className="w-full p-2 border-[1px] border-black/70 rounded-md focus:outline-primary"
-//             />
-//             <input
-//               type="email"
-//               name="email"
-//               id="email"
-//               placeholder="Email"
-//               className="w-full p-2 border-[1px] border-black/70 rounded-md focus:outline-primary"
-//             />
-//           </div>
-
-//           <div className="md:flex space-y-3 md:space-y-0 md:space-x-3 xl:space-x-5">
-//             <input
-//               type="text"
-//               placeholder="Address"
-//               className="w-full p-2 border-[1px] border-black/70 rounded-md focus:outline-primary"
-//             />
-//             <input
-//               type="text"
-//               placeholder="Tutor Lesson"
-//               className="w-full p-2 border-[1px] border-black/70 rounded-md focus:outline-primary"
-//             />
-//           </div>
-
-//           <div className="md:flex space-y-3 md:space-y-0 md:space-x-3 xl:space-x-5">
-//             <input
-//               type="number"
-//               name="phonenumber"
-//               id="phonenumber"
-//               placeholder="Phone no"
-//               className="w-full p-2 border-[1px] md:w-1/2 border-black/70 rounded-md focus:outline-primary"
-//             />
-//             <div className="relative md:w-1/2">
-//               <CreatableSelect
-//                 isMulti
-//                 className="border-[1px] w-full md:w-full border-black rounded-md"
-//                 options={languages}
-//                 value={selectedLanguages}
-//                 onChange={handleLanguageChange}
-//                 onCreateOption={handleLanguageCreate}
-//                 components={{
-//                   Option: customOption,
-//                   SingleValue: customSingleValue,
-//                 }}
-//               />
-//             </div>
-//           </div>
-
-//           <div className="md:flex space-y-3 md:space-y-0 md:space-x-3 xl:space-x-5">
-//             <input
-//               type="password"
-//               name="password"
-//               id="password"
-//               placeholder="Create New Password"
-//               className="w-full p-2 border-[1px] border-black/70 rounded-md focus:outline-primary"
-//             />
-
-//             <input
-//               type="text"
-//               placeholder="Lesson Subject"
-//               className="w-full p-2 border-[1px] border-black/70 rounded-md focus:outline-primary"
-//             />
-//           </div>
-
-//           <div className="md:flex space-y-3 md:space-y-0 md:space-x-3 xl:space-x-5">
-//             <input
-//               type="text"
-//               placeholder="In Person"
-//               className="w-full p-2 border-[1px] border-black/70 rounded-md focus:outline-primary"
-//             />
-//             <input
-//               type="number"
-//               placeholder="IBAN"
-//               className="w-full p-2 border-[1px] border-black/70 rounded-md focus:outline-primary"
-//             />
-//           </div>
-
-//           <div className="md:flex space-y-3 md:space-y-0 md:space-x-3 xl:space-x-5">
-//             <input
-//               type="text"
-//               placeholder="Policy"
-//               className="w-full p-2 border-[1px] md:w-1/2 border-black/70 rounded-md focus:outline-primary"
-//             />
-
-//             <button
-//               onClick={handleProfileClick}
-//               className="p-2 text-center  md:w-1/2 text-white bg-primary w-full rounded-md"
-//             >
-//               Add Now
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default TutorAddProfile;
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CreatableSelect from "react-select/creatable";
@@ -310,8 +22,7 @@ const TutorAddProfile = () => {
   const [selectedLanguages, setSelectedLanguages] = useState([
     initialLanguages[0],
   ]);
-  // const [image, setImage] = useState(null);
-  // const [preview, setPreview] = useState(null);
+
   const [initialMainData, setInitialMainData] = useState(null);
   const [initialTeacherData, setInitialTeacherData] = useState(null);
   const [existingProfilePic, setExistingProfilePic] = useState(null);
@@ -348,7 +59,12 @@ const TutorAddProfile = () => {
       const teacherDetails = {};
 
       let hasChanges = false;
+      const selectedLangCodes = selectedLanguages
+        .map((lang) => lang.value)
+        .join(",");
 
+      // Include it in values for processing
+      values.languages = selectedLangCodes;
       Object.entries(values).forEach(([key, value]) => {
         const initial = teacherFields.includes(key)
           ? initialTeacherData?.[key]
@@ -389,14 +105,6 @@ const TutorAddProfile = () => {
       if (!response.error) toast.success("Profile updated successfully!");
     },
   });
-
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   setImage(file);
-  //   const reader = new FileReader();
-  //   reader.onloadend = () => setPreview(reader.result);
-  //   reader.readAsDataURL(file);
-  // };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -443,8 +151,9 @@ const TutorAddProfile = () => {
     reader.onloadend = () => setPreview(reader.result);
     reader.readAsDataURL(file);
   };
-  console.log("preview", existingProfilePic);
-  console.log("image", image);
+
+  console.log("languages", languages);
+  console.log("seceted langgg", selectedLanguages);
   return (
     <div className="px-10 pt-10 xl:px-20 space-y-5">
       <form onSubmit={formik.handleSubmit} className="space-y-5">
