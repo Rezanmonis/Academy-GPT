@@ -128,9 +128,9 @@ const TutorListing = () => {
                 />
                 <div className="flex bg-[#F6F6F6]">
                   <div className="space-y-1 lg:space-y-2 xl:mx-auto">
-                    <h2 className="text-lg md:text-xl xl:text-2xl font-semibold text-center">
+                    {/* <h2 className="text-lg md:text-xl xl:text-2xl font-semibold text-center">
                       {tutor?.username || "N/A"}
-                    </h2>
+                    </h2> */}
                     <p className="font-semibold text-[13px] md:text-[15px] xl:text-base text-center">
                       5.0
                       <span className="font-normal pl-1 text-[10px] md:text-[11px] xl:text-xs">
