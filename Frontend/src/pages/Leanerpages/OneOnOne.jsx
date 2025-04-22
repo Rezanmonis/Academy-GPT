@@ -112,7 +112,7 @@ const OneOnOne = () => {
             className="border-2 md:flex col-span-5 z-20 rounded-md drop-shadow-md p-2 mt-4"
           >
             <div className="md:w-3/12">
-              <div className="flex md:block relative md:static space-x-2 md:space-x-0 lg:space-y-1 bg-[#F6F6F6] py-2 pb-3 justify-center">
+              <div className="flex md:block relative md:static space-x-2 md:space-x-0 lg:space-y-1 bg-[#F6F6F6] py-2 pb-3">
                 <img
                   className="w-20 h-20 lg:size-24 xl:size-36 bg-[#F6F6F6] my-auto md:mx-auto rounded-full"
                   src={`https://academy-gpt-backend.onrender.com${tutor?.profile_picture}` || `${placeholderImg}`}
@@ -122,9 +122,9 @@ const OneOnOne = () => {
                 />
                 <div className="flex bg-[#F6F6F6]">
                   <div className="space-y-1 lg:space-y-2 xl:mx-auto">
-                    <h2 className="text-lg md:text-xl xl:text-2xl font-semibold text-center">
+                    {/* <h2 className="text-lg md:text-xl xl:text-2xl font-semibold text-center">
                       {tutor?.username || "N/A"}
-                    </h2>
+                    </h2> */}
                     <p className="font-semibold text-[13px] md:text-[15px] xl:text-base text-center">
                       5.0
                       <span className="font-normal pl-1 text-[10px] md:text-[11px] xl:text-xs">
