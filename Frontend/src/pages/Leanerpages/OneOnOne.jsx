@@ -191,7 +191,7 @@ const OneOnOne = () => {
 
               <div className="flex justify-between py-2">
                 <div className="flex space-x-1 my-auto">
-                  <p className="text-[14px] md:text-xs xl:text-sm font-semibold my-auto">
+                  <p className="text-[12px] md:text-xs xl:text-sm font-semibold my-auto">
                     <p className="text-sm text-gray-700">
                       {tutor?.languages
                         ? tutor.languages
@@ -207,7 +207,7 @@ const OneOnOne = () => {
                     </p>
                   </p>
                   <div className="pl-2">
-                    <button className=" md:inline p-1 px-1 text-base xl:text-lg font-medium rounded-lg bg-[#60AD56] text-white">
+                    <button className=" md:inline p-1 px-1 text-[14px] xl:text-lg font-medium rounded-lg bg-[#60AD56] text-white">
                       {tutor?.teacher_details?.lesson_subject || "N/A"}
                     </button>
                   </div>
