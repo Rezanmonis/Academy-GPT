@@ -174,17 +174,23 @@ const TutorDashboard = () => {
                   <div className="flex space-x-2">
                     <div className="my-auto">
                       <h4 className="flex text-base md:text-lg lg:text-2xl font-semibold whitespace-nowrap">
-                       {student.booking_details.student_first_name}
+                        {student.booking_details.student_first_name}
                       </h4>
                       <p className="text-[9.9px] md:text-xs lg:text-base font-medium text-black/60 whitespace-nowrap">
                         {t("Subject Name")}
                       </p>
                     </div>
-                    <img
-                      className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 my-auto"
-                      src={whatapp}
-                      alt="WhatsApp"
-                    />
+                    <a
+                      href={`https://wa.me/${student?.availability_display?.teacher_contact}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 my-auto"
+                        src={whatapp}
+                        alt="WhatsApp"
+                      />
+                    </a>
                   </div>
                 </div>
                 <div className="space-y-1">
@@ -196,29 +202,40 @@ const TutorDashboard = () => {
                       : t("Group 4+")}
                   </p>
                   <div className="flex justify-end space-x-4">
-                    {student.booking_details.status !== "Confirmed" && student.booking_details.status !== "Completed" && (
-                      <button
-                        className="text-[9.9px] md:text-xs px-2 rounded-md font-medium text-white bg-primary p-1"
-                        onClick={() =>
-                          confirmSlotCompletion(student.booking_details.id)
-                        }
-                      >
-                        <Link to={"#"}>{t("Confirm Slot")}</Link>
-                      </button>
-                    )}
+                    {student.booking_details.status !== "Confirmed" &&
+                      student.booking_details.status !== "Completed" && (
+                        <button
+                          className="text-[9.9px] md:text-xs px-2 rounded-md font-medium text-white bg-primary p-1"
+                          onClick={() =>
+                            confirmSlotCompletion(student.booking_details.id)
+                          }
+                        >
+                          <Link to={"#"}>{t("Confirm Slot")}</Link>
+                        </button>
+                      )}
 
                     <IoMdCheckmarkCircle className="my-auto text-[#A4A4A4] size-5 lg:size-6" />
                   </div>
                   <p className="text-[9.5px] md:text-xs whitespace-nowrap xl:text-base font-medium text-black/60">
-                    {student?.start_time ? new Date(student.start_time).toLocaleDateString('en-US', {
-                      weekday: 'short',
-                      month: 'short',
-                      day: 'numeric'
-                    }) + ' at ' + new Date(student.start_time).toLocaleTimeString('en-US', {
-                      hour: 'numeric',
-                      minute: '2-digit',
-                      hour12: true
-                    }) : 'No date available'}
+                    {student?.start_time
+                      ? new Date(student.start_time).toLocaleDateString(
+                          "en-US",
+                          {
+                            weekday: "short",
+                            month: "short",
+                            day: "numeric",
+                          }
+                        ) +
+                        " at " +
+                        new Date(student.start_time).toLocaleTimeString(
+                          "en-US",
+                          {
+                            hour: "numeric",
+                            minute: "2-digit",
+                            hour12: true,
+                          }
+                        )
+                      : "No date available"}
                   </p>
                 </div>
               </div>

@@ -189,39 +189,36 @@ const OneOnOne = () => {
                 </p>
               </div>
 
-              <div className="flex justify-between py-2">
-                <div className="flex space-x-1 my-auto">
-                  <p className="text-[12px] md:text-xs xl:text-sm font-semibold my-auto">
-                    <p className="text-sm text-gray-700">
-                      {tutor?.languages
-                        ? tutor.languages
-                            .split(",")
-                            .map(
-                              (langCode) =>
-                                initialLanguages.find(
-                                  (l) => l.value === langCode
-                                )?.label || langCode
-                            )
-                            .join(", ")
-                        : t("Language not specified")}
-                    </p>
-                  </p>
-                  <div className="pl-2">
-                    <button className=" md:inline p-1 px-1 text-[14px] xl:text-lg font-medium rounded-lg bg-[#60AD56] text-white">
-                      {tutor?.teacher_details?.lesson_subject || "N/A"}
-                    </button>
-                  </div>
-                </div>
+              <div className="flex flex-col md:flex-row md:justify-between md:items-center py-2 gap-2 md:gap-0">
+  {/* Left Section: Languages and Subject */}
+  <div className="flex flex-wrap items-center gap-2">
+    <p className="text-sm text-gray-700">
+      {tutor?.languages
+        ? tutor.languages
+            .split(",")
+            .map(
+              (langCode) =>
+                initialLanguages.find((l) => l.value === langCode)?.label || langCode
+            )
+            .join(", ")
+        : t("Language not specified")}
+    </p>
+    <span className="text-xs md:text-sm font-medium rounded-full px-3 py-1 bg-[#60AD56] text-white">
+      {tutor?.teacher_details?.lesson_subject || "N/A"}
+    </span>
+  </div>
 
-                <div className="w-[80px]">
-                  <Link
-                    to={`tutordetails/${tutor.teacher_id}`}
-                    className="p-2 rounded-md text-xs md:text-sm xl:text-lg font-semibold text-white bg-primary "
-                  >
-                    {t("View Profile")}
-                  </Link>
-                </div>
-              </div>
+  {/* Right Section: View Profile */}
+  <div className="w-full md:w-auto">
+    <Link
+      to={`tutordetails/${tutor.teacher_id}`}
+      className="block text-center p-2 rounded-md text-xs md:text-sm font-semibold text-white bg-primary w-full md:w-[130px]"
+    >
+      {t("View Profile")}
+    </Link>
+  </div>
+</div>
+
             </div>
           </motion.div>
         ))}
