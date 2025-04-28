@@ -12,6 +12,12 @@ import { apiNonAuthService } from "../../services/apiServices";
 import { toast } from "react-toastify";
 import Navbar from "../../Componets/Navbar";
 
+const initialLanguages = [
+  { value: "en", label: "English", flag: "https://flagcdn.com/us.svg" },
+  { value: "es", label: "Spanish", flag: "https://flagcdn.com/es.svg" },
+  { value: "fr", label: "French", flag: "https://flagcdn.com/fr.svg" },
+];
+
 const TutorListing = () => {
   const [tutors, setTutors] = useState([]);
   const [filteredTutors, setFilteredTutors] = useState([]);
@@ -19,8 +25,6 @@ const TutorListing = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [isFilterApplied, setIsFilterApplied] = useState(false);
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -43,14 +47,12 @@ const TutorListing = () => {
     } else {
       toast.error(response.message);
     }
-    console.log("response ===>", response);
   };
-  console.log("setTutors", filteredTutors);
+
   useEffect(() => {
     getAllTeachers();
   }, []);
 
-  console.log("tutors===>", tutors);
   const handleApplyFilter = () => {
     if (selectedSubject) {
       const filtered = tutors.filter(
@@ -76,7 +78,7 @@ const TutorListing = () => {
   const handleNavigation = () => {
     toast.warn("To view profile or book lesson, you have to login");
   };
-  console.log("tutors", tutors);
+
   return (
     <>
       <Navbar />
@@ -196,7 +198,7 @@ const TutorListing = () => {
                             .split(",")
                             .map(
                               (langCode) =>
-                                initialLanguages.find(
+                                initialLanguages?.find(
                                   (l) => l.value === langCode
                                 )?.label || langCode
                             )
@@ -211,10 +213,10 @@ const TutorListing = () => {
                   </div>
                 </div>
 
-                <div className="w-[80px]">
+                <div className="w-full md:w-auto" onClick={handleNavigation}>
                   <Link
-                    to={`tutordetails/${tutor.teacher_id}`}
-                    className="p-2 rounded-md text-xs md:text-sm xl:text-lg font-semibold text-white bg-primary "
+                    // to={`tutordetails/${tutor.teacher_id}`}
+                    className="block text-center p-2 rounded-md text-xs md:text-sm font-semibold text-white bg-primary w-full md:w-[130px]"
                   >
                     {t("View Profile")}
                   </Link>

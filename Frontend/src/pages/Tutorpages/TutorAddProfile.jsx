@@ -4,7 +4,6 @@ import CreatableSelect from "react-select/creatable";
 import { Camera } from "lucide-react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import axios from "axios";
 import apiService from "../../services/apiServices";
 import { toast } from "react-toastify";
 
