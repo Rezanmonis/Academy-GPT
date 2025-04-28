@@ -9,7 +9,7 @@ import img4 from "../assets/Image/Group3.png";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {motion} from "framer-motion";
+import { motion } from "framer-motion";
 
 const Herosection = () => {
   const { t } = useTranslation();
@@ -17,44 +17,61 @@ const Herosection = () => {
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate(); // Initialize useNavigate
-  const courses = ["Math", "Chemistry", "Physics", "English"];
+  const courses = [
+    "Math",
+    "Chemistry",
+    "Physics",
+    "English",
+    "İlköğretim Matematik",
+    "Lise Matematik",
+    "Fizik",
+    "Kimya",
+    "Biyoloji",
+    "Sosyal Bilgiler",
+    "Türkçe",
+    "Türk Dili ve Edebiyatı",
+    "Fen Bilimleri",
+    "Tarih",
+    "İnkılap Tarihi",
+    "Coğrafya",
+    "İngilizce",
+    "Almanca",
+    "Rusça",
+    "Arapça",
+    "İtalyanca",
+    "Fransızca",
+    "Koçluk",
+  ];
 
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
 
- const handleSearchChange = (e) => {
-   const query = e.target.value;
-   setSearchQuery(query);
+    if (query.trim()) {
+      const filtered = courses.filter((course) =>
+        course.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredCourses(filtered);
+    } else {
+      setFilteredCourses([]);
+    }
+  };
 
-   if (query.trim()) {
-     const filtered = courses.filter((course) =>
-       course.toLowerCase().includes(query.toLowerCase())
-     );
-     setFilteredCourses(filtered);
-   } else {
-     setFilteredCourses([]);
-   }
- };
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(
+        `/tutorlisting?subject=${encodeURIComponent(searchQuery.trim())}`
+      );
+    } else {
+      navigate("/oneonone");
+    }
+  };
 
- const handleSearch = () => {
-   if (searchQuery.trim()) {
-     navigate(
-       `/tutorlisting?subject=${encodeURIComponent(
-         searchQuery.trim()
-       )}`
-     );
-   } else {
-     navigate("/oneonone");
-   }
- };
-
- const handleCourseClick = (course) => {
-   setSearchQuery(course);
-   setShowSuggestions(false); 
-   navigate(
-    `/tutorlisting?subject=${encodeURIComponent(
-      course.trim()
-    )}`
-  );// Close the dropdown after selection
- };
+  const handleCourseClick = (course) => {
+    setSearchQuery(course);
+    setShowSuggestions(false);
+    navigate(`/tutorlisting?subject=${encodeURIComponent(course.trim())}`); // Close the dropdown after selection
+  };
 
   return (
     <>
@@ -65,14 +82,16 @@ const Herosection = () => {
               initial={{ opacity: 0, x: -100 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, ease: "easeInOut", delay: 0.2 }}
-              className="text-[28px] md:text-6xl lg:text-5xl xl:text-7xl lg:ml-14 xl:ml-8  lg:leading-[70px] xl:leading-snug lg:mt-16 font-bold">
+              className="text-[28px] md:text-6xl lg:text-5xl xl:text-7xl lg:ml-14 xl:ml-8  lg:leading-[70px] xl:leading-snug lg:mt-16 font-bold"
+            >
               {t("hero_text")}
             </motion.h2>
             <motion.div
               className="lg:hidden relative"
               initial={{ opacity: 0, x: -200 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, ease: "easeInOut", delay: 0.2 }}>
+              transition={{ duration: 1, ease: "easeInOut", delay: 0.2 }}
+            >
               <input
                 className="w-full p-2 pl-10 bg-primary text-white border-4 border-white shadow-lg placeholder:text-white placeholder:text-lg placeholder:pl-4 rounded-3xl focus:outline-none"
                 type="search"
@@ -93,7 +112,8 @@ const Herosection = () => {
                     <li
                       key={index}
                       className="p-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => handleCourseClick(course)}>
+                      onClick={() => handleCourseClick(course)}
+                    >
                       {course}
                     </li>
                   ))}
@@ -114,7 +134,8 @@ const Herosection = () => {
               initial={{ opacity: 0, x: -200 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, ease: "easeInOut", delay: 0.2 }}
-              className="absolute lg:right-96 lg:-translate-x-16 xl:-translate-x-10 lg:bottom-2 lg:w-[calc(100%-20px)]">
+              className="absolute lg:right-96 lg:-translate-x-16 xl:-translate-x-10 lg:bottom-2 lg:w-[calc(100%-20px)]"
+            >
               <input
                 className="hidden lg:block w-[500px] text-white p-2 lg:p-[10px] bg-primary border-4 lg:pl-12 border-white shadow-lg placeholder:text-white placeholder:text-lg lg:placeholder:pl-1 rounded-3xl focus:outline-none"
                 type="search"
@@ -135,7 +156,8 @@ const Herosection = () => {
                     <li
                       key={index}
                       className="p-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => handleCourseClick(course)}>
+                      onClick={() => handleCourseClick(course)}
+                    >
                       {course}
                     </li>
                   ))}
