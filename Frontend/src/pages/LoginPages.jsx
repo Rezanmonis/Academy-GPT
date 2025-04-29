@@ -380,9 +380,18 @@ const LoginPages = () => {
 
   const handleResendOTP = async () => {
     try {
+
+      const response = await axios.post(
+        `https://academy-gpt-backend.onrender.com/auth/resend-mfa-code`,
+        {
+          email:email
+        }
+      );
+
       const response = await axios.post(`${baseURL}auth/resend-mfa-code`, {
         email: email,
       });
+
 
       if (response.status === 201) {
         setShowNumberCode(true);
