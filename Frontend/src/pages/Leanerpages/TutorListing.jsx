@@ -35,7 +35,8 @@ const TutorListing = () => {
   const getAllTeachers = async (type) => {
     const response = await apiNonAuthService({
       method: "GET",
-      endpoint: `teachers/tutors-list`,
+      endpoint: `teachers/tutors-list?lesson_subject=${subjectFromQuery || ""}`,
+      // endpoint: `teachers/tutors-list`,
     });
 
     if (response) {

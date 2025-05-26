@@ -16,7 +16,7 @@ const OneOnOne = () => {
   const [filteredTutors, setFilteredTutors] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState(null);
   const [isFilterApplied, setIsFilterApplied] = useState(false);
   const token =
     localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -28,10 +28,18 @@ const OneOnOne = () => {
   localStorage.setItem("class_type", 1);
 
   const getAllTeachers = async (type) => {
-    const response = await apiNonAuthService({
-      method: "GET",
-      endpoint: `teachers/tutors-list`,
-    });
+    let response;
+    if (selectedSubject) {
+      response = await apiNonAuthService({
+        method: "GET",
+        endpoint: `teachers/tutors-list?lesson_subject=${selectedSubject}`,
+      });
+    } else {
+      response = await apiNonAuthService({
+        method: "GET",
+        endpoint: `teachers/tutors-list`,
+      });
+    }
 
     if (response) {
       console.log("Patch Successful:", response);
@@ -42,26 +50,23 @@ const OneOnOne = () => {
     } else {
       toast.error(response.message);
     }
-    console.log("response ===>", response);
   };
-  console.log("setTutors", filteredTutors);
   useEffect(() => {
     getAllTeachers();
-  }, []);
+  }, [selectedSubject]);
 
-  console.log("tutors===>", tutors);
   const handleApplyFilter = () => {
-    if (selectedSubject) {
-      const filtered = tutors.filter(
-        (tutor) =>
-          tutor.subject?.toLowerCase() === selectedSubject.toLowerCase()
-      );
-      setFilteredTutors(filtered);
-      setIsFilterApplied(true);
-    } else {
-      setFilteredTutors(tutors);
-      setIsFilterApplied(false); // Reset to all tutors if no subject selected
-    }
+    // if (selectedSubject) {
+    //   const filtered = tutors.filter(
+    //     (tutor) =>
+    //       tutor.subject?.toLowerCase() === selectedSubject.toLowerCase()
+    //   );
+    //   setFilteredTutors(filtered);
+    //   setIsFilterApplied(true);
+    // } else {
+    //   setFilteredTutors(tutors);
+    //   setIsFilterApplied(false); // Reset to all tutors if no subject selected
+    // }
     setShowFilter(false); // Close the filter modal
   };
 
@@ -77,7 +82,6 @@ const OneOnOne = () => {
     { value: "es", label: "Spanish", flag: "https://flagcdn.com/es.svg" },
     { value: "fr", label: "French", flag: "https://flagcdn.com/fr.svg" },
   ];
-
   return (
     <>
       <div className="grid grid-cols-5  px-3">
@@ -190,35 +194,35 @@ const OneOnOne = () => {
               </div>
 
               <div className="flex flex-col md:flex-row md:justify-between md:items-center py-2 gap-2 md:gap-0">
-  {/* Left Section: Languages and Subject */}
-  <div className="flex flex-wrap items-center gap-2">
-    <p className="text-sm text-gray-700">
-      {tutor?.languages
-        ? tutor.languages
-            .split(",")
-            .map(
-              (langCode) =>
-                initialLanguages.find((l) => l.value === langCode)?.label || langCode
-            )
-            .join(", ")
-        : t("Language not specified")}
-    </p>
-    <span className="text-xs md:text-sm font-medium rounded-full px-3 py-1 bg-[#60AD56] text-white">
-      {tutor?.teacher_details?.lesson_subject || "N/A"}
-    </span>
-  </div>
+                {/* Left Section: Languages and Subject */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-sm text-gray-700">
+                    {tutor?.languages
+                      ? tutor.languages
+                          .split(",")
+                          .map(
+                            (langCode) =>
+                              initialLanguages.find((l) => l.value === langCode)
+                                ?.label || langCode
+                          )
+                          .join(", ")
+                      : t("Language not specified")}
+                  </p>
+                  <span className="text-xs md:text-sm font-medium rounded-full px-3 py-1 bg-[#60AD56] text-white">
+                    {tutor?.teacher_details?.lesson_subject || "N/A"}
+                  </span>
+                </div>
 
-  {/* Right Section: View Profile */}
-  <div className="w-full md:w-auto">
-    <Link
-      to={`tutordetails/${tutor.teacher_id}`}
-      className="block text-center p-2 rounded-md text-xs md:text-sm font-semibold text-white bg-primary w-full md:w-[130px]"
-    >
-      {t("View Profile")}
-    </Link>
-  </div>
-</div>
-
+                {/* Right Section: View Profile */}
+                <div className="w-full md:w-auto">
+                  <Link
+                    to={`tutordetails/${tutor.teacher_id}`}
+                    className="block text-center p-2 rounded-md text-xs md:text-sm font-semibold text-white bg-primary w-full md:w-[130px]"
+                  >
+                    {t("View Profile")}
+                  </Link>
+                </div>
+              </div>
             </div>
           </motion.div>
         ))}
@@ -240,6 +244,29 @@ const OneOnOne = () => {
                   <option value="Math">Math</option>
                   <option value="Physics">Physics</option>
                   <option value="English">English</option>
+                  <option value="İlköğretim Matematik">
+                    İlköğretim Matematik
+                  </option>
+                  <option value="Lise Matematik">Lise Matematik</option>
+                  <option value="Fizik">Fizik</option>
+                  <option value="Kimya">Kimya</option>
+                  <option value="Biyoloji">Biyoloji</option>
+                  <option value="Sosyal Bilgiler">Sosyal Bilgiler</option>
+                  <option value="Türkçe">Türkçe</option>
+                  <option value="Türk Dili ve Edebiyatı">
+                    Türk Dili ve Edebiyatı
+                  </option>
+                  <option value="Fen Bilimleri">Fen Bilimleri</option>
+                  <option value="Tarih">Tarih</option>
+                  <option value="İnkılap Tarihi">İnkılap Tarihi</option>
+                  <option value="Coğrafya">Coğrafya</option>
+                  <option value="İngilizce">İngilizce</option>
+                  <option value="Almanca">Almanca</option>
+                  <option value="Rusça">Rusça</option>
+                  <option value="Arapça">Arapça</option>
+                  <option value="İtalyanca">İtalyanca</option>
+                  <option value="Fransızca">Fransızca</option>
+                  <option value="Koçluk">Koçluk</option>
                 </select>
               </div>
 
@@ -253,7 +280,10 @@ const OneOnOne = () => {
                 </button>
                 <button
                   className="p-1 px-2 rounded-md text-xl font-bold text-primary border-primary border-[1px]"
-                  onClick={() => setShowFilter(false)}
+                  onClick={() => {
+                    setSelectedSubject(null);
+                    setShowFilter(false);
+                  }}
                 >
                   Cancel
                 </button>
