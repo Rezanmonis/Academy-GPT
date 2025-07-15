@@ -181,7 +181,7 @@ function MeetingScheduler({ onCancel, viewSlots }) {
       const authToken = sessionStorage.getItem("token"); // Retrieve token (example)
 
       const response = await axios.post(
-        `${baseURL}teachers/availabilities`,
+        `${baseURL}/teachers/availabilities`,
         selectedSlots,
         {
           headers: {
@@ -213,7 +213,7 @@ function MeetingScheduler({ onCancel, viewSlots }) {
       const authToken = sessionStorage.getItem("token"); // Retrieve token (example)
 
       const response = await axios.get(
-        `${baseURL}teachers/availabilities?teacher_id=${teacher?.data?.teacher_id}`,
+        `${baseURL}/teachers/availabilities?teacher_id=${teacher?.data?.teacher_id}`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`, // Attach token

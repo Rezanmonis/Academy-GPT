@@ -337,7 +337,7 @@ const LoginPages = () => {
 
   const handleVerifyOTP = async () => {
     try {
-      const response = await axios.post(`${baseURL}auth/verify-mfa`, {
+      const response = await axios.post(`${baseURL}/auth/verify-mfa`, {
         user: userData.user,
         token: verifiactionToken,
       });
@@ -380,7 +380,7 @@ const LoginPages = () => {
 
   const handleResendOTP = async () => {
     try {
-      const response = await axios.post(`${baseURL}auth/resend-mfa-code`, {
+      const response = await axios.post(`${baseURL}/auth/resend-mfa-code`, {
         email: email,
       });
 
