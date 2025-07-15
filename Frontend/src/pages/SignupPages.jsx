@@ -72,7 +72,7 @@ const SignupPages = () => {
       setApiLoading(true);
 
       const response = await axios.post(
-        "https://academy-gpt-backend.onrender.com/api/auth/registration",
+        `${import.meta.env.VITE_BASE_URL}/api/auth/registration`,
         {
           first_name: firstName,
           last_name: lastName,

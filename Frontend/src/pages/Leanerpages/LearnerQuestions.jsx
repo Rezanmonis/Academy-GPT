@@ -32,7 +32,7 @@ const LearnerQuestions = () => {
 
       try {
         const response = await axios.get(
-          "https://academy-gpt-backend.onrender.com/courses/student-queries",
+          `${import.meta.env.VITE_BASE_URL}/courses/student-queries`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

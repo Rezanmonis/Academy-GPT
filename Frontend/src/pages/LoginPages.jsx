@@ -277,7 +277,7 @@ const LoginPages = () => {
       setIsLoading(true);
 
       const response = await axios.post(
-        "https://academy-gpt-backend.onrender.com/api/auth/login",
+        `${import.meta.env.VITE_BASE_URL}/api/auth/login`,
         { email: email.trim(), password },
         { headers: { "Content-Type": "application/json" } }
       );

@@ -696,7 +696,7 @@ function AskQuestion() {
         }
 
         response = await axios.post(
-          "https://academy-gpt-backend.onrender.com/courses/student-queries",
+          `${import.meta.env.VITE_BASE_URL}/courses/student-queries`,
           formData,
           {
             headers: {

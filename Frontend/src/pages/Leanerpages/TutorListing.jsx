@@ -124,7 +124,7 @@ const TutorListing = () => {
                 <img
                   className="w-20 h-20 lg:size-24 xl:size-36 bg-[#F6F6F6] my-auto md:mx-auto rounded-full"
                   src={
-                    `https://academy-gpt-backend.onrender.com${tutor?.profile_picture}` ||
+                    `${import.meta.env.VITE_BASE_URL}${tutor?.profile_picture}` ||
                     `${placeholderImg}`
                   }
                   alt={tutor.username}

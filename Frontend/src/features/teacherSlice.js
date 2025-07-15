@@ -24,7 +24,7 @@ export const fetchTeacherData = createAsyncThunk(
 
       // Fetch user profile to extract teacher ID
       const userResponse = await axios.get(
-        "https://academy-gpt-backend.onrender.com/users/me",
+        `${import.meta.env.VITE_BASE_URL}/users/me`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ export const fetchTeacherData = createAsyncThunk(
 
       // Fetch teacher profile using the teacher ID
       const teacherResponse = await axios.get(
-        `https://academy-gpt-backend.onrender.com/teachers/${teacherId}/`,
+        `${import.meta.env.VITE_BASE_URL}/teachers/${teacherId}/`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

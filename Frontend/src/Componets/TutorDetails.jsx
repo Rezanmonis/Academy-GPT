@@ -30,7 +30,7 @@ const TutorDetails = () => {
           localStorage.getItem("token") || sessionStorage.getItem("token");
 
         const response = await fetch(
-          `https://academy-gpt-backend.onrender.com/teachers/tutors-list?id=${id}`,
+          `${import.meta.env.VITE_BASE_URL}/teachers/tutors-list?id=${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
