@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import DottedLoader from "./Loader";
 import { Trash } from "lucide-react";
 import apiService from "../services/apiServices";
+import { buildUrl } from "../services/config";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -181,7 +182,7 @@ function MeetingScheduler({ onCancel, viewSlots }) {
       const authToken = sessionStorage.getItem("token"); // Retrieve token (example)
 
       const response = await axios.post(
-        `${baseURL}/teachers/availabilities`,
+        buildUrl(`/teachers/availabilities`),
         selectedSlots,
         {
           headers: {
@@ -213,7 +214,7 @@ function MeetingScheduler({ onCancel, viewSlots }) {
       const authToken = sessionStorage.getItem("token"); // Retrieve token (example)
 
       const response = await axios.get(
-        `${baseURL}/teachers/availabilities?teacher_id=${teacher?.data?.teacher_id}`,
+        buildUrl(`/teachers/availabilities?teacher_id=${teacher?.data?.teacher_id}`),
         {
           headers: {
             Authorization: `Bearer ${authToken}`, // Attach token

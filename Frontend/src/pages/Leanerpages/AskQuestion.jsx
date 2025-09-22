@@ -728,7 +728,7 @@ function AskQuestion() {
           formData.append("language", userLanguage);
 
           response = await axios.post(
-            "https://academy-gpt.onrender.com/api/chat-with-image",
+            `${import.meta.env.VITE_BASE_URL}/api/chat-with-image`,
             formData,
             {
               headers: { "Content-Type": "multipart/form-data" },
@@ -736,7 +736,7 @@ function AskQuestion() {
           );
         } else {
           response = await axios.post(
-            "https://academy-gpt.onrender.com/api/chat",
+            `${import.meta.env.VITE_BASE_URL}/api/chat`,
             {
               question: fullQuestion,
               chatHistory: conversationId ? formatTextOnlyHistory(pastQA) : [],

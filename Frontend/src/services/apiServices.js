@@ -1,8 +1,9 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { BASE_URL, buildUrl } from "./config";
 
 // Base API URL (set this according to your backend)
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE = BASE_URL;
 
 console.log("BASE_URL===>", BASE_URL);
 
@@ -26,7 +27,7 @@ const apiService = async ({
   try {
     const response = await axios({
       method,
-      url: `${BASE_URL}${endpoint}`,
+      url: buildUrl(endpoint),
       data,
       params,
       headers: {
@@ -79,7 +80,7 @@ export const apiNonAuthService = async ({
   try {
     const response = await axios({
       method,
-      url: `${BASE_URL}${endpoint}`,
+      url: buildUrl(endpoint),
       data,
       params,
     });

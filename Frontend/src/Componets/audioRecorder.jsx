@@ -20,7 +20,7 @@ const AudioRecorder = ({ onTranscription }) => {
 
     const getWebSocketUrl = async () => {
         const response = await fetch(
-          "http://13.229.233.201/api/transcribe/"
+          `${import.meta.env.VITE_BASE_URL}/api/transcribe/`
         );
         if (!response.ok) {
             throw new Error('Failed to fetch WebSocket URL');

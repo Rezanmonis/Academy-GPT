@@ -14,6 +14,7 @@ import { fetchUserData } from "../../features/userSlice";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
+import { buildUrl } from "../../services/config";
 import apiService from "../../services/apiServices";
 
 const LeanerDashboard = () => {
@@ -36,7 +37,7 @@ const LeanerDashboard = () => {
 
   const getUserData = async () => {
     const profileResponse = await axios.get(
-      "https://academy-gpt-backend.onrender.com/users/me",
+      buildUrl("/users/me"),
       {
         headers: {
           Authorization: `Bearer ${token}`,

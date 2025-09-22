@@ -8,6 +8,7 @@ import flag from "../assets/Image/UK Flag.png";
 import { IoLocationOutline } from "react-icons/io5";
 import whatapp from "../assets/Image/whatsapp.png";
 import { useTranslation } from "react-i18next";
+import { buildUrl } from "../services/config";
 import SlotCalendarStudent from "./SlotCalendarStudent";
 
 const TutorDetails = () => {
@@ -30,7 +31,7 @@ const TutorDetails = () => {
           localStorage.getItem("token") || sessionStorage.getItem("token");
 
         const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/teachers/tutors-list?id=${id}`,
+          buildUrl(`/teachers/tutors-list?id=${id}`),
           {
             headers: {
               Authorization: `Bearer ${token}`,

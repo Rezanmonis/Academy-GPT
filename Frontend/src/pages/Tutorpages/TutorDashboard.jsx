@@ -35,7 +35,7 @@ const TutorDashboard = () => {
     try {
       const response = await apiService({
         method: "GET",
-        endpoint: `teachers/availabilities?teacher_id=${teacher?.data?.teacher_id}&is_booked=1`,
+        endpoint: `/teachers/availabilities?teacher_id=${teacher?.data?.teacher_id}&is_booked=1`,
       });
       const teacherData = response.data;
       console.log("teacherData", teacherData);
@@ -53,7 +53,7 @@ const TutorDashboard = () => {
     try {
       const response = await apiService({
         method: "PATCH",
-        endpoint: `teachers/bookings/${slotId}`,
+        endpoint: `/teachers/bookings/${slotId}`,
         data: { status: "Confirmed" },
       });
 

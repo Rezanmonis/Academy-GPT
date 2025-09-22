@@ -9,7 +9,7 @@ const urlEndpoint = import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT;
 // Define the authenticator function for secure uploads
 const authenticator = async () => {
   try {
-    const response = await fetch("http://localhost:8081/api/v1/upload");
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/upload`);
 
     if (!response.ok) {
       const errorText = await response.text();
